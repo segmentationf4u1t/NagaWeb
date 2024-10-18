@@ -2,9 +2,9 @@ export const Core = {
 	// Service Name
 	name: "NagaAI",
 	// Service Version
-	version: "3.7.0 07042024",
+	version: "181024",
 	// Service Title
-	title: "NagaAI - Cutting-Edge AI Solutions for Developers & Businesses",
+	title: "NagaAI - Cheapest AI API",
 	// Service Description
 	description: `Unlock the power of artificial intelligence with NagaAI's reliable API access to the latest in AI technology. Empower your projects with next-gen AI capabilities including advanced language models, image generation, text-to-speech, transcription, translation and moderation. Elevate your applications with NagaAI.`,
 	// Service Discord
@@ -12,7 +12,7 @@ export const Core = {
 };
 const BASE_URL = "https://api.naga.ac/v1/";
 //Global Cache 30 mins
-export const keepCacheFor: number = 60 * 30;
+export const keepCacheFor: number = 1 * 60;
 export const Endpoints = {
 	NAGA_BASE_URL: BASE_URL,
 	NAGA_MODEL_LIST: `${BASE_URL}models`,

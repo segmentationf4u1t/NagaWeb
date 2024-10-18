@@ -4,6 +4,7 @@ import { limitsApi } from "./api/limitsApi";
 import { modelsApi } from "./api/modelsApi";
 import menuOpenReducer from "./features/isMenuOpen/isMenuOpenSlice";
 import screenSizeReducer from "./features/screenSize/screenSizeSlice";
+import savingCostsReducer from './features/SavingCosts/SavingCosts';
 
 export const makeStore = () => {
 	const store = configureStore({
@@ -12,6 +13,7 @@ export const makeStore = () => {
 			isMenuOpen: menuOpenReducer,
 			[modelsApi.reducerPath]: modelsApi.reducer,
 			[limitsApi.reducerPath]: limitsApi.reducer,
+			savingCosts: savingCostsReducer,
 		},
 		middleware: (getDefaultMiddleware) =>
 			getDefaultMiddleware().concat(modelsApi.middleware, limitsApi.middleware),

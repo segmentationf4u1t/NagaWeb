@@ -1,354 +1,397 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+	:root {
+		--background: 0 0% 100%;
+		--foreground: 240 10% 3.9%;
+		--card: 0 0% 100%;
+		--card-foreground: 240 10% 3.9%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 240 10% 3.9%;
+		--primary: 240 5.9% 10%;
+		--primary-foreground: 0 0% 98%;
+		--secondary: 240 4.8% 95.9%;
+		--secondary-foreground: 240 5.9% 10%;
+		--muted: 240 4.8% 95.9%;
+		--muted-foreground: 240 3.8% 46.1%;
+		--accent: 240 4.8% 95.9%;
+		--accent-foreground: 240 5.9% 10%;
+		--destructive: 0 84.2% 60.2%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 240 5.9% 90%;
+		--input: 240 5.9% 90%;
+		--ring: 240 5.9% 10%;
+		--radius: 1rem;
+		--color-1: 0 100% 63%;
+		--color-2: 270 100% 63%;
+		--color-3: 210 100% 63%;
+		--color-4: 195 100% 63%;
+		--color-5: 90 100% 63%;
+	}
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
- 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
- 
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
- 
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
- 
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
- 
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
- 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
- 
-    --radius: 0.5rem;
-  }
- 
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
- 
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
- 
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
- 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
- 
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
- 
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
- 
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
- 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
- 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-  }
+	.dark {
+		--background: 240 10% 3.9%;
+		--foreground: 0 0% 98%;
+		--card: 240 10% 3.9%;
+		--card-foreground: 0 0% 98%;
+		--popover: 240 10% 3.9%;
+		--popover-foreground: 0 0% 98%;
+		--primary: 0 0% 98%;
+		--primary-foreground: 240 5.9% 10%;
+		--secondary: 240 3.7% 15.9%;
+		--secondary-foreground: 0 0% 98%;
+		--muted: 240 3.7% 15.9%;
+		--muted-foreground: 240 5% 64.9%;
+		--accent: 240 3.7% 15.9%;
+		--accent-foreground: 0 0% 98%;
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 0 0% 98%;
+		--border: 240 3.7% 15.9%;
+		--input: 240 3.7% 15.9%;
+		--ring: 240 4.9% 83.9%;
+		--color-1: 0 100% 63%;
+		--color-2: 270 100% 63%;
+		--color-3: 210 100% 63%;
+		--color-4: 195 100% 63%;
+		--color-5: 90 100% 63%;
+	}
 }
- 
+
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
 }
 .lgo {
-  background-image: url('/lgo.jpg');
-  background-size: cover;
-  width: 100%;
-  height: auto;
-  object-fit: contain; /* Or 'contain', depending on your need */
+	background-image: url("/lgo.jpg");
+	background-size: cover;
+	width: 100%;
+	height: auto;
+	object-fit: contain; /* Or 'contain', depending on your need */
 }
 .radioul {
-  background: radial-gradient(circle, #1a1a1a, #0a0a0a);
+	background: radial-gradient(circle, #1a1a1a, #0a0a0a);
 }
 /* Looper styles */
 @keyframes slideAnim {
-  from {
-    transform: translateX(0%);
-  }
-  to {
-    transform: translateX(-100%);
-  }
+	from {
+		transform: translateX(0%);
+	}
+	to {
+		transform: translateX(-100%);
+	}
 }
 
 .looper {
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-  mask-image: linear-gradient(transparent,
-          black 20%,
-          black 80%,
-          transparent 100%);
-      -webkit-mask-image: linear-gradient( to right,transparent,
-          black 20%,
-          black 80%,
-          transparent 100%);
-          
-    
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+	mask-image: linear-gradient(
+		transparent,
+		black 20%,
+		black 80%,
+		transparent 100%
+	);
+	-webkit-mask-image: linear-gradient(
+		to right,
+		transparent,
+		black 20%,
+		black 80%,
+		transparent 100%
+	);
 }
 
 .looper__innerList {
-  display: flex;
-  justify-content: center;
-  width: fit-content;
+	display: flex;
+	justify-content: center;
+	width: fit-content;
 }
 
 .looper__innerList[data-animate="true"] .looper__listInstance {
-  animation: slideAnim linear infinite;   
+	animation: slideAnim linear infinite;
 }
 
 .looper__listInstance {
-  display: flex;
-  width: max-content;
+	display: flex;
+	width: max-content;
 
-  animation: none;
+	animation: none;
 }
 
 .description {
-  margin-bottom: 16px;  
-  text-align: center;
+	margin-bottom: 16px;
+	text-align: center;
 }
 .contentBlock {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
 }
-.contentBlock--one {  
-  width: 200px;
-  
-
+.contentBlock--one {
+	width: 200px;
 }
 .contentBlock--one:last-of-type {
-  color: var(--green);
-  margin-right: 36px;
+	color: var(--green);
+	margin-right: 36px;
 }
-.contentBlock--two {    
-  color: var(--green);  
-  opacity: 0.7;
-
+.contentBlock--two {
+	color: var(--green);
+	opacity: 0.7;
 }
 .fade-effect {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 100px; /* Adjust the width of the fade effect */
-  background: linear-gradient(to left, #ffffff, transparent);
-  
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 100px; /* Adjust the width of the fade effect */
+	background: linear-gradient(to left, #ffffff, transparent);
 }
 
 .videoContainer {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  min-width: 100%;
-  min-height: 100%;
-  z-index: -1; /* Ensure it stays in the background */
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	min-width: 100%;
+	min-height: 100%;
+	z-index: -1; /* Ensure it stays in the background */
 }
 
 .video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* This will ensure the video covers the whole screen */
+	width: 100%;
+	height: 100%;
+	object-fit: cover; /* This will ensure the video covers the whole screen */
 }
 @keyframes blink {
-  0% { opacity: 1; }
-  50% { opacity: 0; }
-  100% { opacity: 1; }
+	0% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }
 
 .animate-blink {
-  animation: blink 1s infinite;
+	animation: blink 1s infinite;
 }
 
 .terminal {
-  position: relative;
-  overflow: hidden;
+	position: relative;
+	overflow: hidden;
 }
 
 .terminal::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 0.5rem;
-  border: 2px solid transparent;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.5s;
-  animation: lightBeam 2s linear infinite;
-  animation-play-state: paused;
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 0.5rem;
+	border: 2px solid transparent;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.5s;
+	animation: lightBeam 2s linear infinite;
+	animation-play-state: paused;
 }
 
 .terminal.animate::before {
-  opacity: 1;
-  animation-play-state: running;
+	opacity: 1;
+	animation-play-state: running;
 }
 
 @keyframes lightBeam {
-  0% {
-    box-shadow: 0 0 0 0 rgba(57, 151, 240, 0.911);
-    border-color: #4fd1c5;
-    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-  }
-  25% {
-    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-  }
-  50% {
-    clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
-    box-shadow: 0 0 20px 5px rgba(57, 151, 240, 0.911);
-  }
-  75% {
-    clip-path: polygon(100% 100%, 0 100%, 0 100%, 100% 100%);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(57, 151, 240, 0.911);
-    border-color: #4fd1c5;
-    clip-path: polygon(0 100%, 0 100%, 0 0, 0 0);
-  }
+	0% {
+		box-shadow: 0 0 0 0 rgba(57, 151, 240, 0.911);
+		border-color: #4fd1c5;
+		clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+	}
+	25% {
+		clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+	}
+	50% {
+		clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+		box-shadow: 0 0 20px 5px rgba(57, 151, 240, 0.911);
+	}
+	75% {
+		clip-path: polygon(100% 100%, 0 100%, 0 100%, 100% 100%);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(57, 151, 240, 0.911);
+		border-color: #4fd1c5;
+		clip-path: polygon(0 100%, 0 100%, 0 0, 0 0);
+	}
 }
 @keyframes snakeMovement {
-  0% {
-    transform: translateX(0) translateY(0);
-  }
-  25% {
-    transform: translateX(20px) translateY(-10px);
-  }
-  50% {
-    transform: translateX(40px) translateY(0);
-  }
-  75% {
-    transform: translateX(20px) translateY(10px);
-  }
-  100% {
-    transform: translateX(0) translateY(0);
-  }
+	0% {
+		transform: translateX(0) translateY(0);
+	}
+	25% {
+		transform: translateX(20px) translateY(-10px);
+	}
+	50% {
+		transform: translateX(40px) translateY(0);
+	}
+	75% {
+		transform: translateX(20px) translateY(10px);
+	}
+	100% {
+		transform: translateX(0) translateY(0);
+	}
 }
 .ascii-art::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  animation: headMovement 4s linear infinite;
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	animation: headMovement 4s linear infinite;
 }
 .HeroTitle {
-  font-size: 2.25rem;
-  font-weight: 800;
-  line-height: 1.2;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  background-image: linear-gradient(to right, white, #71717a);
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+	font-size: 2.25rem;
+	font-weight: 800;
+	line-height: 1.2;
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+	background-image: linear-gradient(to right, white, #71717a);
+	padding-top: 1rem;
+	padding-bottom: 1rem;
 
-  @media (min-width: 1024px) {
-    font-size: 3rem;
-  }
+	@media (min-width: 1024px) {
+		font-size: 3rem;
+	}
 }
 .HeroContent {
-  margin: 0 auto;
-  max-width: 36rem;
+	margin: 0 auto;
+	max-width: 36rem;
 
-  @media (min-width: 1024px) {
-    max-width: 48rem;
-  }
+	@media (min-width: 1024px) {
+		max-width: 48rem;
+	}
 }
 .HeroContainer {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  color: white;
-  margin-top: 1rem;
-  background-image: url("/patternpad.svg");
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	color: white;
+	margin-top: 1rem;
+	background-image: url("/patternpad.svg");
 }
 .HeroDescription {
-  margin: 0 auto;
-  color: #e4e4e7;
-  font-size: 1.125rem;
-  max-width: 65ch;
+	margin: 0 auto;
+	color: #e4e4e7;
+	font-size: 1.125rem;
+	max-width: 65ch;
 
-  @media (min-width: 768px) {
-    font-size: 1.25rem;
-  }
+	@media (min-width: 768px) {
+		font-size: 1.25rem;
+	}
 }
 .TerminalContainer {
-  margin: 0 auto;
-  position: relative;
-  width: 100%;
-  height: 450px;
-  
-  @media (min-width: 640px) {
-    width: 700px;
-  }
+	margin: 0 auto;
+	position: relative;
+	width: 100%;
+	height: 450px;
+
+	@media (min-width: 640px) {
+		width: 700px;
+	}
 }
 .CtaContainer {
-  color: white;
-  text-align: left;
+	color: white;
+	text-align: left;
 }
 .GradientText {
-  background-image: linear-gradient(to right, #ff00ff, #00ffff, #ff00ff);
-  background-size: 200% auto;
-  color: #000;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradientAnimation 5s linear infinite;
-
+	background-image: linear-gradient(to right, #ff00ff, #00ffff, #ff00ff);
+	background-size: 200% auto;
+	color: #000;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	animation: gradientAnimation 5s linear infinite;
 }
 @keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }
 .ResponsiveFont {
-  @media (max-width: 853px) {
-    font-size: 11px !important;
-  }
-   
-  @media (max-width: 768px) {
-    font-size: 12px !important;
-  }
+	@media (max-width: 853px) {
+		font-size: 11px !important;
+	}
 
-  @media (max-width: 480px) {
-    font-size: 8px !important;
-  }
-  @media (max-width: 375px) {
-    font-size: 6px !important;
-  }
+	@media (max-width: 768px) {
+		font-size: 12px !important;
+	}
+
+	@media (max-width: 480px) {
+		font-size: 8px !important;
+	}
+	@media (max-width: 375px) {
+		font-size: 6px !important;
+	}
 }
+.ptrn {
+	background-image: url("/pattern-randomized.svg");
+	opacity: 0.5;
+}
+
+.bg {
+	background-color: #000000;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 1500'%3E%3Cdefs%3E%3CradialGradient id='fade-mask' cx='0%25' cy='0%50' r='60%25' fx='0%30' fy='0%20'%3E%3Cstop offset='25%25' style='stop-color:white%3B stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:white%3B stop-opacity:0' /%3E%3C/radialGradient%3E%3Cmask id='mask'%3E%3Crect width='100%25' height='100%25' fill='url(%23fade-mask)' /%3E%3C/mask%3E%3Crect stroke='%23000000' stroke-width='0.9' width='1' height='1' id='s'/%3E%3Cpattern id='a' width='3' height='3' patternUnits='userSpaceOnUse' patternTransform='scale(24.1) translate(-958.51 -718.88)'%3E%3Cuse fill='%23242424' href='%23s' y='2'/%3E%3Cuse fill='%23242424' href='%23s' x='1' y='2'/%3E%3Cuse fill='%23333333' href='%23s' x='2' y='2'/%3E%3Cuse fill='%23333333' href='%23s'/%3E%3Cuse fill='%233e3e3e' href='%23s' x='2'/%3E%3Cuse fill='%233e3e3e' href='%23s' x='1' y='1'/%3E%3C/pattern%3E%3Cpattern id='b' width='7' height='11' patternUnits='userSpaceOnUse' patternTransform='scale(24.1) translate(-958.51 -718.88)'%3E%3Cg fill='%23484848'%3E%3Cuse href='%23s'/%3E%3Cuse href='%23s' y='5' /%3E%3Cuse href='%23s' x='1' y='10'/%3E%3Cuse href='%23s' x='2' y='1'/%3E%3Cuse href='%23s' x='2' y='4'/%3E%3Cuse href='%23s' x='3' y='8'/%3E%3Cuse href='%23s' x='4' y='3'/%3E%3Cuse href='%23s' x='4' y='7'/%3E%3Cuse href='%23s' x='5' y='2'/%3E%3Cuse href='%23s' x='5' y='6'/%3E%3Cuse href='%23s' x='6' y='9'/%3E%3C/g%3E%3C/pattern%3E%3Cpattern id='h' width='5' height='13' patternUnits='userSpaceOnUse' patternTransform='scale(24.1) translate(-958.51 -718.88)'%3E%3Cg fill='%23484848'%3E%3Cuse href='%23s' y='5'/%3E%3Cuse href='%23s' y='8'/%3E%3Cuse href='%23s' x='1' y='1'/%3E%3Cuse href='%23s' x='1' y='9'/%3E%3Cuse href='%23s' x='1' y='12'/%3E%3Cuse href='%23s' x='2'/%3E%3Cuse href='%23s' x='2' y='4'/%3E%3Cuse href='%23s' x='3' y='2'/%3E%3Cuse href='%23s' x='3' y='6'/%3E%3Cuse href='%23s' x='3' y='11'/%3E%3Cuse href='%23s' x='4' y='3'/%3E%3Cuse href='%23s' x='4' y='7'/%3E%3Cuse href='%23s' x='4' y='10'/%3E%3C/g%3E%3C/pattern%3E%3Cpattern id='c' width='17' height='13' patternUnits='userSpaceOnUse' patternTransform='scale(24.1) translate(-958.51 -718.88)'%3E%3Cg fill='%23515151'%3E%3Cuse href='%23s' y='11'/%3E%3Cuse href='%23s' x='2' y='9'/%3E%3Cuse href='%23s' x='5' y='12'/%3E%3Cuse href='%23s' x='9' y='4'/%3E%3Cuse href='%23s' x='12' y='1'/%3E%3Cuse href='%23s' x='16' y='6'/%3E%3C/g%3E%3C/pattern%3E%3Cpattern id='d' width='19' height='17' patternUnits='userSpaceOnUse' patternTransform='scale(24.1) translate(-958.51 -718.88)'%3E%3Cg fill='%23000000'%3E%3Cuse href='%23s' y='9'/%3E%3Cuse href='%23s' x='16' y='5'/%3E%3Cuse href='%23s' x='14' y='2'/%3E%3Cuse href='%23s' x='11' y='11'/%3E%3Cuse href='%23s' x='6' y='14'/%3E%3C/g%3E%3Cg fill='%23585858'%3E%3Cuse href='%23s' x='3' y='13'/%3E%3Cuse href='%23s' x='9' y='7'/%3E%3Cuse href='%23s' x='13' y='10'/%3E%3Cuse href='%23s' x='15' y='4'/%3E%3Cuse href='%23s' x='18' y='1'/%3E%3C/g%3E%3C/pattern%3E%3Cpattern id='e' width='47' height='53' patternUnits='userSpaceOnUse' patternTransform='scale(24.1) translate(-958.51 -718.88)'%3E%3Cg fill='%23F60'%3E%3Cuse href='%23s' x='2' y='5'/%3E%3Cuse href='%23s' x='16' y='38'/%3E%3Cuse href='%23s' x='46' y='42'/%3E%3Cuse href='%23s' x='29' y='20'/%3E%3C/g%3E%3C/pattern%3E%3Cpattern id='f' width='59' height='71' patternUnits='userSpaceOnUse' patternTransform='scale(24.1) translate(-958.51 -718.88)'%3E%3Cg fill='%23F60'%3E%3Cuse href='%23s' x='33' y='13'/%3E%3Cuse href='%23s' x='27' y='54'/%3E%3Cuse href='%23s' x='55' y='55'/%3E%3C/g%3E%3C/pattern%3E%3Cpattern id='g' width='139' height='97' patternUnits='userSpaceOnUse' patternTransform='scale(24.1) translate(-958.51 -718.88)'%3E%3Cg fill='%23F60'%3E%3Cuse href='%23s' x='11' y='8'/%3E%3Cuse href='%23s' x='51' y='13'/%3E%3Cuse href='%23s' x='17' y='73'/%3E%3Cuse href='%23s' x='99' y='57'/%3E%3C/g%3E%3C/pattern%3E%3C/defs%3E%3Cg mask='url(%23mask)'%3E%3Crect fill='url(%23a)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23b)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23h)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23c)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23d)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23e)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23f)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23g)' width='100%25' height='100%25'/%3E%3C/g%3E%3C/svg%3E");
+	background-size: cover;
+	mask-image: radial-gradient(circle at center, black, transparent);
+	position: absolute;
+	z-index: -1;
+	width: 100%;
+}
+.grayscale {
+	filter: grayscale(100%);
+}
+.sepia {
+	filter: brightness(99999%);
+}
+
+.gradient-border {
+	border: 2px solid;
+	border-image-slice: 1;
+	border-width: 4px;
+	border-image-source: linear-gradient(270deg, #f3ec78, #af4261);
+	animation: borderAnimation 3s infinite;
+	outline: none;
+	font-size: 18px;
+	border-radius: 50%;
+	width: 100px; /* Set equal width and height */
+	height: 100px; /* Adjust as necessary */
+}
+
+@keyframes borderAnimation {
+	0% {
+		border-image-source: linear-gradient(270deg, #f3ec78, #af4261);
+	}
+	50% {
+		border-image-source: linear-gradient(90deg, #af4261, #f3ec78);
+	}
+	100% {
+		border-image-source: linear-gradient(270deg, #f3ec78, #af4261);
+	}
+}
+
