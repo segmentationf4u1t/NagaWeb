@@ -1,18 +1,24 @@
-"use client";
-import HeroSection from "@/components/HeroT";
-import dynamic from "next/dynamic";
-const Reel = dynamic(() => import("@/components/Reel"));
-const SectionB = dynamic(() => import("@/components/SectionB"));
-import Nav from "@/components/Nav";
-//import SectionB from '@/components/SectionB'
-import { Core } from "@/conf/cfg";
+import { BackgroundBeams } from "@/components/ui/background-beams";
+
+import Hero from "@/components/home/Hero";
+import FeaturesTwo from "@/components/home/Feattwo";
+import { MarqueeVertical } from "@/components/home/MarqueeVer";
+
 export default function Home() {
 	return (
-		<div className="container">
-			<Nav title={Core.title} version={Core.version} discord={Core.discord} />
-			<HeroSection />
-			<SectionB />
-			<Reel />
-		</div>
+		<>
+			<div className="absolute inset-0 z-[-1]">
+				<BackgroundBeams />
+			</div>
+
+			<Hero />
+
+			<div className="container relative">
+				<div className="hidden md:block">
+					<MarqueeVertical />
+				</div>
+				<FeaturesTwo />
+			</div>
+		</>
 	);
 }

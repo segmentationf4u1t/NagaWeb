@@ -1,0 +1,2 @@
+$env:OPENAI_API_KEY = "YourNagaKeyGoesHere"
+$env:OPENAI_BASE_URL = "https://api.naga.ac/v1"
