@@ -1,4 +1,9 @@
 // features/screenSize/screenSizeSlice.ts
+
+//
+// I dont know what i thought when i wrote this code, and how i wanted it to function but its huge hack and redundant
+// It should be burned down
+//
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface ScreenSizeState {
