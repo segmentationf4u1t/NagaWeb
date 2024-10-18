@@ -1,28 +1,34 @@
-const { next } = require('next');
-const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
-/** @type {import('next').NextConfig} */
+const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 
+module.exports = (phase) => {
+	const isDev = phase === PHASE_DEVELOPMENT_SERVER;
 
-module.exports = (phase, {defaultConfig}) => {
-  if (phase === PHASE_DEVELOPMENT_SERVER) {
-    return {
-      devIndicators: {
-        buildActivityPosition: 'top-right',
-        experimental: {
-          webVitalsAttribution: ['CLS', 'LCP']
-        },
-      },
-  }
-  
+	const config = {
+		reactStrictMode: true,
+		pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+		compress: true, 
+		productionBrowserSourceMaps: true,
+		images: {
+			domains: ['images.unsplash.com', 'assets.aceternity.com'],
+		  },
+		experimental: {
+			reactCompiler: true,
+		},
+		bundlePagesRouterDependencies: true,
+	};
 
-}
-const nextConfig = {
-  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
-  swcMinify: true,
-  compress: true,
-  experimental: {
-    mdxRs: true,
-  }
-};
-return nextConfig
+	if (isDev) {
+		config.devIndicators = {
+			buildActivityPosition: "top-right",
+			experimental: {
+				webVitalsAttribution: ["CLS", "LCP"],
+			},
+		};
+	} else {
+		
+		config.swcMinify = true;
+	}
+
+	
+	return config; 
 };
