@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const generateContributionData = () => {
+const Heatmapapi = () => {
 	const today = new Date();
 	const data = [];
 	for (let i = 0; i < 357; i++) {
@@ -18,7 +18,7 @@ const generateContributionData = () => {
 	return data;
 };
 
-const contributionData = generateContributionData();
+const contributionData = Heatmapapi();
 
 const getColor = (count: number) => {
 	if (count === 0) return "bg-neutral-800";
