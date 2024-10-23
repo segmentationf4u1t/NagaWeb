@@ -4,7 +4,7 @@ import { useGetModelsQuery } from "@/lib/api/modelsApi";
 export const useDashboardNav = () => {
 	const { data: models = [], isLoading, isError } = useGetModelsQuery();
 	const getBadgeText = (label: string) => {
-		if (isLoading) return "Loading";
+		if (isLoading) return "69";
 		if (!models || isError) return "Error";
 		if (label === "Models") return models.length.toString();
 		return undefined;

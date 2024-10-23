@@ -1,6 +1,11 @@
 import { Endpoints } from "@/conf/cfg";
 import { keepCacheFor } from "@/conf/cfg";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import type { Model } from '@/types/models';
+
+
+//Be mindful that this is only client side api, it is not used for server side api, for that we use server actions.
+//23.10.24
 const textModels = [
 	"llama-2-70b-chat",
 	"llama-2-13b-chat",
@@ -41,10 +46,8 @@ const textModels = [
 	"command-r",
 	"mixtral-8x7b-instruct",
 	"mistral-7b-instruct",
-	"gpt-4o-2024-05-13",
 	"codestral-2405",
 	"gemini-1.5-flash-latest",
-	"chatgpt-4o-latest",
 	"llama-3.1-405b-instruct",
 	"llama-3.1-70b-instruct",
 	"llama-3.1-8b-instruct",
@@ -111,6 +114,8 @@ const multimodalModels = [
 	"gemini-1.5-pro",
 	"gemini-1.5-flash",
 	"gpt-4-vision-preview",
+	"gpt-4o-2024-05-13",
+	"chatgpt-4o-latest"
 ];
 const moderationModels = ["text-moderation-stable", "text-moderation-latest"];
 
@@ -662,32 +667,6 @@ const getAdditionalInfo = (modelId: string) => {
 		}
 	);
 };
-interface UnitCosts {
-	per_input_token?: string;
-	per_output_token?: string;
-	tokens_per_input_image?: number;
-	per_image?: string;
-	per_token?: string;
-	per_second?: string;
-	per_character?: string;
-}
-
-interface Pricing extends UnitCosts {}
-
-export interface Model {
-	id: string;
-	object: string;
-	limiter?: string;
-	pricing?: Pricing;
-	max_images?: number;
-	multiple_of?: number;
-	allowed_for?: string[];
-	type: string;
-	modelType: string;
-	contextLength: number | undefined;
-	description: string;
-	company: string;
-}
 
 //27.03 Caching for Query
 //14.10.24 Additional context length, description and company info added

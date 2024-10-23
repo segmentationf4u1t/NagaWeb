@@ -1,8 +1,8 @@
 "use client";
 
 import Marquee from "@/components/ui/marquee";
-import { useGetModelsQuery,type Model } from "@/lib/api/modelsApi";
-
+import { useGetModelsQuery} from "@/lib/api/modelsApi";
+import type { Model } from '@/types/models';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";

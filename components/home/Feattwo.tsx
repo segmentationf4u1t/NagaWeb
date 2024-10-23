@@ -1,4 +1,3 @@
-
 "use client"
 import {
 	Card,
@@ -21,7 +20,9 @@ export default function FeaturesTwo() {
 			content: () => (
 				<>
 					We offer access to over{' '}
-					{isLoading ? (
+					{error ? (
+						'many'
+					) : isLoading ? (
 						'...'
 					) : (
 						<span className='font-bold'>{totalModels}</span>
