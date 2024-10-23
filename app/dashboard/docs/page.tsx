@@ -134,8 +134,8 @@ $env:OPENAI_BASE_URL=https://api.naga.ac/v1`}
 						</CardHeader>
 						<CardContent>
 							<ul className="space-y-2">
-								{NagaEndpoints.map((endpoint, index) => (
-									<li key={index} className="flex items-center">
+								{NagaEndpoints.map((endpoint) => (
+									<li key={endpoint.url} className="flex items-center">
 										<span className="font-semibold mr-2">
 											{endpoint.description}:
 										</span>

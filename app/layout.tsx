@@ -5,7 +5,6 @@ import { Core } from "@/conf/cfg";
 import Head from "next/head";
 import StoreProvider from "./StoreProvider";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -60,8 +59,6 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	
-
 	return (
 		<StoreProvider>
 			<html lang="en" suppressHydrationWarning>
