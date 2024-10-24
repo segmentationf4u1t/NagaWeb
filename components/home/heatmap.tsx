@@ -7,7 +7,7 @@ const Heatmapapi = () => {
 	for (let i = 0; i < 357; i++) {
 		const date = new Date(today.getTime() - (356 - i) * 24 * 60 * 60 * 1000);
 		const randomValue = Math.random();
-		let count;
+		let count: number;
 		if (randomValue < 0.6) {
 			count = 0;
 		} else {
@@ -59,7 +59,7 @@ export default function Heatmap() {
 				<div className="flex flex-col text-xs">
 					<div className="flex justify-between mb-1 text-gray-400">
 						{monthLabels.map((month, index) => (
-							<span key={index}>{month}</span>
+							<span key={month}>{month}</span>
 						))}
 					</div>
 					<div className="flex">

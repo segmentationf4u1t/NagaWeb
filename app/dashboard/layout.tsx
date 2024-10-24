@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 
-import DashboardNavigation from "@/components/dashboard/DashboardNavigation";
+import DashboardNavigationServer from "@/components/dashboard/DashboardNavigationServer";
 import SignIn from "@/components/sign-in";
 
 export default async function DashboardLayout({
@@ -9,7 +9,6 @@ export default async function DashboardLayout({
 	children: React.ReactNode;
 }) {
 	const session = await auth();
-
 	if (!session?.user)
 		return (
 			<>
@@ -22,7 +21,7 @@ export default async function DashboardLayout({
 			{/* Sidebar */}
 			<aside className="w-[220px] lg:w-[280px] hidden md:flex flex-col border-r bg-muted/40">
 				<div className="flex-1 overflow-y-auto">
-					<DashboardNavigation />
+					<DashboardNavigationServer />
 				</div>
 				<div className="p-2" />
 			</aside>

@@ -409,7 +409,7 @@ const modelAdditionalInfo: Record<
 		contextLength: 33000,
 		description:
 			"A code-focused language model released in May 2024, optimized for programming tasks",
-		company: "Unknown",
+		company: "Mistral AI",
 	},
 	"gemini-1.5-flash-latest": {
 		contextLength: 1000000,

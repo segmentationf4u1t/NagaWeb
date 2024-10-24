@@ -1,4 +1,3 @@
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { 
@@ -11,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical, LogOut, User } from "lucide-react";
 import { signOut } from "@/auth";
+import { handleSignOut } from "@/lib/actions/auth";
 
 interface UserProfileProps {
 	name?: string;
@@ -19,9 +19,9 @@ interface UserProfileProps {
 }
 
 export default function UserBar({
-	name = "Placeholder",
-	tier = "Unknown",
-	avatarUrl = "",
+	name,
+	tier ,
+	avatarUrl,
 }: UserProfileProps) {
 	const initials = name
 		? name
@@ -64,10 +64,7 @@ export default function UserBar({
 						<User className="mr-2 h-4 w-4" />
 						<span>Profile</span>
 					</DropdownMenuItem>
-					<form action={async () => {
-						'use server'
-						await signOut();
-					}}>
+					<form action={handleSignOut}>
 						<DropdownMenuItem
 							className="text-red-600 focus:text-red-600"
 							asChild

@@ -32,6 +32,7 @@ interface ModelTableProps {
 
 const ModelTable: React.FC<ModelTableProps> = ({ data }) => {
 	const tableRef = useRef<HTMLDivElement>(null);
+	const DECIMAL_PLACES = 8;
 
 	return (
 		<div className="flex flex-col h-full">
@@ -77,11 +78,32 @@ const ModelTable: React.FC<ModelTableProps> = ({ data }) => {
 								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
 									{model.pricing ? (
 										<div>
-											{Object.entries(model.pricing).map(([key, value]) => (
-												<div key={key}>
-													{key.replace(/_/g, " ")}: ${Number(value).toFixed(8)}
-												</div>
-											))}
+											{model.modelType.toLowerCase() === 'image' && model.pricing.per_image && (
+												<div>Per Image: ${Number(model.pricing.per_image).toFixed(DECIMAL_PLACES)}</div>
+											)}
+											{(model.modelType.toLowerCase() === 'text' || model.modelType.toLowerCase() === 'multimodal') && (
+												<>
+													{model.pricing.per_input_token && (
+														<div>Per Input Token: ${Number(model.pricing.per_input_token).toFixed(DECIMAL_PLACES)}</div>
+													)}
+													{model.pricing.per_output_token && (
+														<div>Per Putput Token: ${Number(model.pricing.per_output_token).toFixed(DECIMAL_PLACES)}</div>
+													)}
+												</>
+											)}
+											{model.modelType.toLowerCase() === 'embedding' && model.pricing.per_token && (
+												<div>per token: ${Number(model.pricing.per_token).toFixed(DECIMAL_PLACES)}</div>
+											)}
+											{model.modelType.toLowerCase() === 'audio' && (
+												<>
+													{model.pricing.per_second && (
+														<div>Per Second: ${Number(model.pricing.per_second).toFixed(DECIMAL_PLACES)}</div>
+													)}
+													{model.pricing.per_character && Number.isNaN(Number(model.pricing.per_character)) === false && (
+														<div>Per Character: ${Number(model.pricing.per_character).toFixed(DECIMAL_PLACES)}</div>
+													)}
+												</>
+											)}
 										</div>
 									) : (
 										"N/A"

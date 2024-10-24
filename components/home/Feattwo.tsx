@@ -41,7 +41,7 @@ export default function FeaturesTwo() {
 			id: 2,
 			title: "OG's in Business",
 			description: "Ruling The Scene Since Day Zero",
-			content: "We've seen 'em come and seen 'em flow, watched 'em rise and watched 'em blow, now we're here and they're gone.",
+			content: "We've seen 'em come and watch 'em go, watched 'em rise witnessed it, and wonder where they've gone now.",
 		},
 		{
 			id: 3,

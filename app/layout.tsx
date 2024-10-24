@@ -13,10 +13,9 @@ export const metadata: Metadata = {
 		"Unlock advanced artificial intelligence capabilities with NagaAI. Leverage powerful APIs for GPT-4 language models, image generation, text-to-speech, transcription, translation, moderation & more. Elevate your applications with bleeding-edge AI from the industry leader.",
 	keywords:
 		"AI APIs, GPT-4, Claude 3, ChatGPT, image generation, text-to-speech, speech-to-text, translation, moderation, advanced AI, cutting-edge AI, artificial intelligence solutions, AI for developers, AI for businesses, NagaAI, cheap, best, best ai api, best ai api 2024, best ai api 2024",
-	metadataBase:
-		typeof process.env.NEXT_PUBLIC_WEB_URL === "string"
-			? new URL(process.env.NEXT_PUBLIC_WEB_URL)
-			: null,
+	metadataBase: new URL(
+		process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000'
+	),
 	openGraph: {
 		type: "website",
 		locale: "en_US",

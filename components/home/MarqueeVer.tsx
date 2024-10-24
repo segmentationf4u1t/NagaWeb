@@ -41,7 +41,7 @@ export default function LlmCard({
 					<CardTitle className="text-lg sm:text-xl md:text-2xl font-bold">{name}</CardTitle>
 					<p className="text-xs sm:text-sm text-muted-foreground mt-1">{modelType}</p>
 				</div>
-				<Avatar className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12">
+				<Avatar className="h-10 w-10 sm:h-10 sm:w-10 md:h-10 md:w-10">
 					<AvatarImage src={`/logos/${companyLogo.toLowerCase()}.svg`} alt={`${company} logo`} />
 					<AvatarFallback>{company[0]}</AvatarFallback>
 				</Avatar>
