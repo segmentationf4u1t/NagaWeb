@@ -24,11 +24,7 @@ module.exports = (phase) => {
 				webVitalsAttribution: ["CLS", "LCP"],
 			},
 		};
-	} else {
-		
-		config.swcMinify = true;
 	}
 
-	
-	return config; 
+	return config;
 };
