@@ -20,7 +20,10 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true
-		}
+		},
+		"ignore": [
+			"components/ui/background-beams.tsx"
+		]
 	},
 	"javascript": {
 		"formatter": {

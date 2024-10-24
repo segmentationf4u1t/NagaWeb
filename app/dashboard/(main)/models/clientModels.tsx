@@ -107,7 +107,7 @@ const clientModels = () => {
 		<div className="h-screen flex flex-col p-2">
 			<div className="flex-grow">
 				<div
-					className="rounded-lg border border-dashed shadow-sm"
+					className="rounded-lg border shadow-smm"
 					x-chunk="dashboard-02-chunk-1"
 				>
 					<div className="flex-grow overflow-hidden">

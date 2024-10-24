@@ -82,9 +82,7 @@ export default function LeaderboardPage() {
 
 	return (
 		<div className="p-4">
-			<div className="rounded-lg border shadow-sm">
-				<ModelComparisonTable rawData={rawData} />
-			</div>
+			<ModelComparisonTable rawData={rawData} />
 		</div>
 	);
 }

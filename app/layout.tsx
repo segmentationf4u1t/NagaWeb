@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 	keywords:
 		"AI APIs, GPT-4, Claude 3, ChatGPT, image generation, text-to-speech, speech-to-text, translation, moderation, advanced AI, cutting-edge AI, artificial intelligence solutions, AI for developers, AI for businesses, NagaAI, cheap, best, best ai api, best ai api 2024, best ai api 2024",
 	metadataBase: new URL(
-		process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000'
+		process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3000",
 	),
 	openGraph: {
 		type: "website",
