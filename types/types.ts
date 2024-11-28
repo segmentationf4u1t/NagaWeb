@@ -7,14 +7,15 @@ export interface FeatureItem {
 	id: string;
 }
 
-export interface Categories {
+export type Categories = {
+	[key: string]: string[]; 
 	reasoning: string[];
 	coding: string[];
 	mathematics: string[];
 	data_analysis: string[];
 	language: string[];
 	if: string[];
-}
+};
 
 export interface CheckedCategories {
 	[key: string]: {

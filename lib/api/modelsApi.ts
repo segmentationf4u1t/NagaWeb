@@ -57,6 +57,13 @@ const textModels = [
 	"llama-3.2-90b-vision-instruct",
 	"llama-3.2-11b-vision-instruct",
 	"llama-3.2-1b-instruct",
+	"o1-mini-2024-09-12",
+	"o1-preview-2024-09-12",
+	"mistral-large-2411",
+	"gemini-1.5-flash-002",
+	"gemini-1.5-pro-002",
+	"gemini-exp-1114",
+
 
 ];
 const imageModels = [
@@ -79,6 +86,9 @@ const imageModels = [
 	"flux-1-pro",
 	"flux-1-dev",
 	"flux-1-schnell",
+	"stable-diffusion-3.5-large",
+	"flux-1.1-pro",
+	"flux-1.1-pro-ultra",
 ];
 const audioModels = [
 	"whisper-1",
@@ -101,12 +111,12 @@ const embeddingModels = [
 	"text-embedding-3-large",
 ];
 
-//
+
 // This has to be thought of, Firstly - The term multimodal is not precise,
 // for example even stable-diffusion is multimodal cause it generates images from text,
 // so there are already two modalities.
 // Secondly, I dont have idea how it should function now.
-//
+
 const multimodalModels = [
 	"gpt-4o-2024-08-06",
 	"gpt-4o-mini-2024-07-18",
@@ -115,7 +125,9 @@ const multimodalModels = [
 	"gemini-1.5-flash",
 	"gpt-4-vision-preview",
 	"gpt-4o-2024-05-13",
-	"chatgpt-4o-latest"
+	"chatgpt-4o-latest",
+	"gpt-4o-2024-11-20",
+	
 ];
 const moderationModels = ["text-moderation-stable", "text-moderation-latest"];
 
@@ -702,8 +714,36 @@ export const modelsApi = createApi({
 			},
 			keepUnusedDataFor: keepCacheFor,
 		}),
+
+		// New endpoint to get model counts by type
+		getModelTypeCounts: build.query<Record<string, number>, void>({
+			query: () => "models",
+			transformResponse: (response: { data: Model[] }) => {
+				const models = response.data.filter((model) => model.object === "model");
+				const counts: Record<string, number> = {
+					Text: 0,
+					Image: 0,
+					Audio: 0,
+					Multimodal: 0,
+					Embedding: 0,
+					Moderation: 0,
+				};
+
+				for (const model of models) {
+					const modelType = modelTypeMap[model.id.toLowerCase()] || "Unknown";
+					counts[modelType] = (counts[modelType] || 0) + 1;
+				}
+
+				return counts;
+			},
+			keepUnusedDataFor: keepCacheFor,
+		}),
 	}),
 });
 
 // Update the exported hooks
-export const { useGetModelsQuery, useGetTotalModelsQuery } = modelsApi;
+export const { 
+	useGetModelsQuery, 
+	useGetTotalModelsQuery,
+	useGetModelTypeCountsQuery 
+} = modelsApi;

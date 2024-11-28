@@ -18,7 +18,7 @@ interface Categories {
 	data_analysis: string[];
 	language: string[];
 	if: string[];
-	[key: string]: string[]; // Add index signature
+	[key: string]: string[]; 
 }
 
 export function processLivebenchData(csvContent: string): ProcessedResults[] {
@@ -59,21 +59,18 @@ export function processLivebenchData(csvContent: string): ProcessedResults[] {
 
 		const result: ProcessedResults = {
 			model: row.model,
-			reasoning_average: Number(calculateAverage(row, categories.reasoning)),
-			coding_average: Number(calculateAverage(row, categories.coding)),
-			mathematics_average: Number(
-				calculateAverage(row, categories.mathematics),
-			),
-			data_analysis_average: Number(
-				calculateAverage(row, categories.data_analysis),
-			),
-			language_average: Number(calculateAverage(row, categories.language)),
-			if_average: Number(calculateAverage(row, categories.if)),
+			reasoning_average: calculateAverage(row, categories.reasoning) as number,
+			coding_average: calculateAverage(row, categories.coding) as number,
+			mathematics_average: calculateAverage(row, categories.mathematics) as number,
+			data_analysis_average: calculateAverage(row, categories.data_analysis) as number,
+			language_average: calculateAverage(row, categories.language) as number,
+			if_average: calculateAverage(row, categories.if) as number,
 			global_average: 0,
 		};
 
+		// Convert '-' to 0 for the global average calculation
 		result.global_average = Number(
-			getGlobalAverage(row, checkedCategories, categories),
+			getGlobalAverage(row, checkedCategories, categories) || 0
 		);
 		results.push(result);
 	}

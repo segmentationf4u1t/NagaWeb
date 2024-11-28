@@ -9,10 +9,13 @@ const getCachedModelCount = unstable_cache(
     try {
       const response = await fetch(`${Endpoints.NAGA_BASE_URL}models`);
       const data = await response.json();
-      return data.data.filter((model: Model) => model.object === "model").length;
+      return {
+        count: data.data.filter((model: Model) => model.object === "model").length,
+        timestamp: new Date().toISOString()
+      };
     } catch (error) {
       console.error("Failed to fetch model count:", error);
-      return 0;
+      return { count: 0, timestamp: new Date().toISOString() };
     }
   },
   ['model-count'], // cache key
@@ -22,6 +25,6 @@ const getCachedModelCount = unstable_cache(
   }
 );
 
-export async function getModelCount(): Promise<number> {
+export async function getModelCount(): Promise<{count: number, timestamp: string}> {
   return getCachedModelCount();
 }

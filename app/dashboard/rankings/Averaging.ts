@@ -33,14 +33,16 @@ export const getGlobalAverage = (
 	checkedCategories: CheckedCategories,
 	categories: Categories,
 ) => {
-	const averages = Object.entries(checkedCategories).flatMap(
-		([category, checks]) =>
+	const averages = Object.entries(checkedCategories)
+		.flatMap(([category, checks]) =>
 			checks.average
 				? [calculateAverage(row, categories[category])]
 				: checks.allSubcategories
 					? [calculateAverage(row, categories[category])]
 					: [],
-	);
+		)
+		.filter((val): val is number => typeof val === 'number');  // Filter out '-' strings
+	
 	const avg = averages.length
 		? averages.reduce((a, b) => a + b) / averages.length
 		: 0;
@@ -51,11 +53,12 @@ export const calculateAverage = (
 	row: Record<string, string | number>,
 	columns: string[],
 ) => {
-	if (!columns || columns.length === 0) return 0;
+	if (!columns) return '-';
 	const validValues = columns
-		.map((col) => (typeof row[col] === "string" ? Number(row[col]) : row[col]))
-		.filter((val) => !Number.isNaN(val as number)) as number[];
-	return validValues.length > 0
-		? validValues.reduce((a, b) => a + b, 0) / validValues.length
-		: 0;
+			.map(col => Number.parseFloat(row[col] as string))
+			.filter(val => !Number.isNaN(val));
+	const average = validValues.length > 0 
+			? validValues.reduce((a, b) => a + b, 0) / validValues.length 
+			: Number.NaN;
+	return Number.isNaN(average) ? '-' : average;
 };
