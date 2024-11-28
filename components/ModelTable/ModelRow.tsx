@@ -1,5 +1,5 @@
 // ModelRow.tsx
-import React, { FC, memo, useEffect, useRef } from "react";
+import { FC, memo, useEffect, useRef } from "react";
 import { TableCell, TableRow } from "../ui/table";
 import type { Model } from "./ModelTable";
 import PricingInfo from "./PricingInfo";
