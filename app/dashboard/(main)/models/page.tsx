@@ -1,5 +1,6 @@
 import ClientModels from "./clientModels";
-
-export default function ModelsPage() {
+import { headers } from "next/headers";
+export default async function ModelsPage() {
+	
 	return <ClientModels />;
 }

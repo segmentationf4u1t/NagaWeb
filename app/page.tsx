@@ -16,6 +16,7 @@ export default function Home() {
 			<div className="container relative">
 				<div className="hidden md:block">
 					<MarqueeVertical />
+					
 				</div>
 				<FeaturesTwo />
 			</div>

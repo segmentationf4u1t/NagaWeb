@@ -26,4 +26,5 @@ export const Endpoints = {
 	NAGA_TRANSCRIPTIONS: `${BASE_URL}audio/transcriptions`,
 	NAGA_TRANSLATIONS: `${BASE_URL}audio/translations`,
 	NAGA_MODERATIONS: `${BASE_URL}moderations`,
+	NAGA_EVALUATIONS: 'https://livebench.ai/table_2024_11_25.csv',
 };

@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search } from "lucide-react";
+import { getAdditionalInfo } from "@/lib/api/modelsApi";
 
 // Interfaces
 export interface Pricing {
@@ -51,6 +52,7 @@ const formatTokenPrice = (price?: number) => {
 const ModelTableRow: React.FC<{ model: Model; index: number }> = React.memo(
 	({ model, index }) => {
 		const DECIMAL_PLACES = 8;
+		const additionalInfo = getAdditionalInfo(model.id);
 
 		return (
 			<motion.tr
@@ -77,21 +79,17 @@ const ModelTableRow: React.FC<{ model: Model; index: number }> = React.memo(
 					{model.id}
 				</motion.td>
 				<motion.td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
-					{model.modelType}
+					{additionalInfo.type}
 				</motion.td>
 				<motion.td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
 					{model.pricing ? (
 						<div>
-							{model.modelType.toLowerCase() === "image" &&
-								model.pricing.per_image && (
-									<div>
-										Per Image: $
-										{model.pricing.per_image.toFixed(DECIMAL_PLACES)}
-									</div>
-								)}
-							{["text", "multimodal"].includes(
-								model.modelType.toLowerCase(),
-							) && (
+							{additionalInfo.type === "Image" && model.pricing.per_image && (
+								<div>
+									Per Image: ${model.pricing.per_image.toFixed(DECIMAL_PLACES)}
+								</div>
+							)}
+							{["Text", "Multimodal"].includes(additionalInfo.type) && (
 								<>
 									{model.pricing.per_input_token && (
 										<div>
@@ -107,7 +105,7 @@ const ModelTableRow: React.FC<{ model: Model; index: number }> = React.memo(
 									)}
 								</>
 							)}
-							{model.modelType.toLowerCase() === "embedding" &&
+							{additionalInfo.type === "Embedding" &&
 								model.pricing.per_token && (
 									<div>
 										Per 1M Tokens: $
@@ -116,7 +114,7 @@ const ModelTableRow: React.FC<{ model: Model; index: number }> = React.memo(
 										)}
 									</div>
 								)}
-							{model.modelType.toLowerCase() === "audio" && (
+							{additionalInfo.type === "Audio" && (
 								<>
 									{model.pricing.per_second && (
 										<div>

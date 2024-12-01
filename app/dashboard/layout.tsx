@@ -1,20 +1,21 @@
 import { auth } from "@/auth";
-
 import DashboardNavigationServer from "@/components/dashboard/DashboardNavigationServer";
 import SignIn from "@/components/sign-in";
+import { headers } from "next/headers";
 
 export default async function DashboardLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	const session = await auth();
-	if (!session?.user)
-		return (
-			<>
-				<SignIn />
-			</>
-		);
+	const headerList = await headers();
+	const session = await auth.api.getSession({
+		headers: headerList, // you need to pass the headers object.
+	});
+
+	if (!session) {
+		return <SignIn />;
+	}
 
 	return (
 		<div className="min-h-screen flex">

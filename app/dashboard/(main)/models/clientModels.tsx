@@ -13,16 +13,17 @@ const ErrorLog = dynamic(() => import("@/components/Err"), {
 	loading: () => <Loading />,
 });
 
-const ComparisonTable = dynamic(() => import("@/components/ModelTable/ComparisonTable"), {
-	loading: () => <ModelTableSkeleton />,
-});
-
-
+const ComparisonTable = dynamic(
+	() => import("@/components/ModelTable/ComparisonTable"),
+	{
+		loading: () => <ModelTableSkeleton />,
+	},
+);
 
 const combineModelsAndLimits = (modelsData: Model[], limitsData: Limit[]) => {
 	return modelsData.map((model) => {
 		const contextLength = model.contextLength?.toString();
-		
+
 		const modelLimit = limitsData.find((limit) => limit.id === model.limiter);
 
 		// Convert pricing string values to numbers
@@ -51,7 +52,7 @@ const combineModelsAndLimits = (modelsData: Model[], limitsData: Limit[]) => {
 			: null;
 
 		const tiersData = {
-			"tier-1": "0",  // Default value
+			"tier-1": "0", // Default value
 			free: undefined,
 			"tier-2": undefined,
 			"tier-3": undefined,
@@ -60,7 +61,10 @@ const combineModelsAndLimits = (modelsData: Model[], limitsData: Limit[]) => {
 				(acc: { [key: string]: string }, [tierName, limits]) => {
 					if (Array.isArray(limits)) {
 						acc[tierName] = limits
-							.map(([value, unit]: [number | string, string]) => `${value} ${unit}`)
+							.map(
+								([value, unit]: [number | string, string]) =>
+									`${value} ${unit}`,
+							)
 							.join(", ");
 					}
 					return acc;
@@ -78,7 +82,6 @@ export default function ClientModels() {
 	const { data = initialData } = useFetchEvaluationsQuery(undefined, {
 		skip: false,
 	});
-	
 
 	const {
 		data: modelsData,
@@ -111,7 +114,7 @@ export default function ClientModels() {
 		limitsData || [],
 	);
 
-	const transformedEvaluations = data.map(result => ({
+	const transformedEvaluations = data.map((result) => ({
 		model: result.model,
 		globalAverage: result.global_average,
 		reasoning: result.reasoning_average,
@@ -119,10 +122,9 @@ export default function ClientModels() {
 		mathematics: result.mathematics_average,
 		dataAnalysis: result.data_analysis_average,
 		language: result.language_average,
-		if: result.if_average
+		if: result.if_average,
 	}));
 	console.log("transformedEvaluations \n", transformedEvaluations);
-	
 
 	return (
 		<div className="h-screen flex flex-col p-2">
@@ -133,12 +135,14 @@ export default function ClientModels() {
 				>
 					<div className="flex-grow overflow-hidden">
 						<div className="h-full p-4">
-							<ComparisonTable combinedData={combinedData} evaluationsData={transformedEvaluations} />
+							<ComparisonTable
+								combinedData={combinedData}
+								evaluationsData={transformedEvaluations}
+							/>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	);
-};
-
+}

@@ -4,7 +4,7 @@ import { limitsApi } from "./api/limitsApi";
 import { modelsApi } from "./api/modelsApi";
 import menuOpenReducer from "./features/isMenuOpen/isMenuOpenSlice";
 import screenSizeReducer from "./features/screenSize/screenSizeSlice";
-import savingCostsReducer from './features/SavingCosts/SavingCosts';
+import savingCostsReducer from "./features/SavingCosts/SavingCosts";
 import { evaluationsApi } from "./api/evaluationsApi";
 
 export const makeStore = () => {
@@ -18,7 +18,11 @@ export const makeStore = () => {
 			savingCosts: savingCostsReducer,
 		},
 		middleware: (getDefaultMiddleware) =>
-			getDefaultMiddleware().concat(modelsApi.middleware, limitsApi.middleware, evaluationsApi.middleware),
+			getDefaultMiddleware().concat(
+				modelsApi.middleware,
+				limitsApi.middleware,
+				evaluationsApi.middleware,
+			),
 	});
 
 	// Set up listeners for RTK Query

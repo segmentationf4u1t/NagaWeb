@@ -3,27 +3,28 @@ import { keepCacheFor } from "@/conf/cfg";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { Model } from "@/types/models";
 
-
-
 enum modelType {
 	Text = "Text",
 	Image = "Image",
 	Audio = "Audio",
 	Multimodal = "Multimodal",
 	Embedding = "Embedding",
-	Moderation = "Moderation"
+	Moderation = "Moderation",
 }
 // Mad inheritance system for model configs
 // 29.11.24
 
-const baseModelConfigs: Record<string, {
-	contextLength: number | undefined;
-	description: string;
-	company: string;
-	maxOutput: number | undefined;
-	trainingCutoff: string | undefined;
-	type: modelType;
-}> = {
+const baseModelConfigs: Record<
+	string,
+	{
+		contextLength: number | undefined;
+		description: string;
+		company: string;
+		maxOutput: number | undefined;
+		trainingCutoff: string | undefined;
+		type: modelType;
+	}
+> = {
 	"claude-3.5-sonnet": {
 		contextLength: 200000,
 		description:
@@ -31,7 +32,7 @@ const baseModelConfigs: Record<string, {
 		company: "Anthropic",
 		maxOutput: 8192,
 		trainingCutoff: "Apr 2024",
-		type: modelType.Text
+		type: modelType.Text,
 	},
 	"claude-3.5-haiku": {
 		contextLength: 200000,
@@ -41,7 +42,6 @@ const baseModelConfigs: Record<string, {
 		maxOutput: 8192,
 		trainingCutoff: "Jul 2024",
 		type: modelType.Text,
-		
 	},
 	"claude-3-opus": {
 		contextLength: 200000,
@@ -50,7 +50,7 @@ const baseModelConfigs: Record<string, {
 		company: "Anthropic",
 		maxOutput: 4096,
 		trainingCutoff: "Aug 2023",
-		type: modelType.Text
+		type: modelType.Text,
 	},
 	"claude-3-sonnet": {
 		contextLength: 200000,
@@ -59,7 +59,7 @@ const baseModelConfigs: Record<string, {
 		company: "Anthropic",
 		maxOutput: 4096,
 		trainingCutoff: "Aug 2023",
-		type: modelType.Text
+		type: modelType.Text,
 	},
 	"claude-3-haiku": {
 		contextLength: 200000,
@@ -68,7 +68,7 @@ const baseModelConfigs: Record<string, {
 		company: "Anthropic",
 		maxOutput: 4096,
 		trainingCutoff: "Aug 2024",
-		type: modelType.Text
+		type: modelType.Text,
 	},
 	"chatgpt-4o-latest": {
 		contextLength: 128000,
@@ -76,7 +76,7 @@ const baseModelConfigs: Record<string, {
 		company: "OpenAI",
 		maxOutput: 16384,
 		trainingCutoff: "Oct 2023",
-		type: modelType.Multimodal
+		type: modelType.Multimodal,
 	},
 	"gpt-4o": {
 		contextLength: 128000,
@@ -84,7 +84,7 @@ const baseModelConfigs: Record<string, {
 		company: "OpenAI",
 		maxOutput: 16384,
 		trainingCutoff: "Oct 2023",
-		type: modelType.Multimodal
+		type: modelType.Multimodal,
 	},
 	"o1-preview": {
 		contextLength: 128000,
@@ -119,15 +119,16 @@ const baseModelConfigs: Record<string, {
 		company: "OpenAI",
 		maxOutput: 4096,
 		trainingCutoff: "Sep 2021",
-		type: modelType.Text
+		type: modelType.Text,
 	},
 	"dall-e-2": {
 		contextLength: undefined,
-		description: "The previous DALL·E model released in Nov 2022. The 2nd iteration of DALL·E with more realistic, accurate, and 4x greater resolution images than the original model.",
+		description:
+			"The previous DALL·E model released in Nov 2022. The 2nd iteration of DALL·E with more realistic, accurate, and 4x greater resolution images than the original model.",
 		company: "OpenAI",
 		maxOutput: undefined,
 		trainingCutoff: undefined,
-		type: modelType.Image
+		type: modelType.Image,
 	},
 	"dall-e-3": {
 		contextLength: undefined,
@@ -135,15 +136,16 @@ const baseModelConfigs: Record<string, {
 		company: "OpenAI",
 		maxOutput: undefined,
 		trainingCutoff: undefined,
-		type: modelType.Image
+		type: modelType.Image,
 	},
 	"omni-moderation": {
 		contextLength: 32768,
-		description: "Latest pinned version of our new multi-modal moderation model, capable of analyzing both text and images.",
+		description:
+			"Latest pinned version of our new multi-modal moderation model, capable of analyzing both text and images.",
 		company: "OpenAI",
 		maxOutput: undefined,
 		trainingCutoff: undefined,
-		type: modelType.Moderation
+		type: modelType.Moderation,
 	},
 	"text-moderation": {
 		contextLength: 32768,
@@ -151,7 +153,7 @@ const baseModelConfigs: Record<string, {
 		company: "OpenAI",
 		maxOutput: undefined,
 		trainingCutoff: undefined,
-		type: modelType.Moderation
+		type: modelType.Moderation,
 	},
 	"llama-3": {
 		contextLength: 8192,
@@ -159,7 +161,7 @@ const baseModelConfigs: Record<string, {
 		company: "Meta",
 		maxOutput: 4096,
 		trainingCutoff: "Dec 2023",
-		type: modelType.Text
+		type: modelType.Text,
 	},
 	"llama-3.2": {
 		contextLength: 128000,
@@ -167,7 +169,7 @@ const baseModelConfigs: Record<string, {
 		company: "Meta",
 		maxOutput: 4096,
 		trainingCutoff: "Dec 2023",
-		type: modelType.Text
+		type: modelType.Text,
 	},
 	"learnlm-1.5-pro": {
 		contextLength: 32768,
@@ -175,7 +177,7 @@ const baseModelConfigs: Record<string, {
 		company: "Google",
 		maxOutput: 8192,
 		trainingCutoff: undefined,
-		type: modelType.Text
+		type: modelType.Text,
 	},
 	"gemini-1.5-pro": {
 		contextLength: 2000000,
@@ -183,15 +185,16 @@ const baseModelConfigs: Record<string, {
 		company: "Google",
 		maxOutput: 8192,
 		trainingCutoff: "Sep 2023",
-		type: modelType.Multimodal
+		type: modelType.Multimodal,
 	},
 	"gemini-1.5-flash": {
 		contextLength: 1000000,
-		description: "The latest Gemini-1.5 Flash model. Points to gemini-1.5-flash-002",
+		description:
+			"The latest Gemini-1.5 Flash model. Points to gemini-1.5-flash-002",
 		company: "Google",
 		maxOutput: 8192,
 		trainingCutoff: "Sep 2024 ",
-		type: modelType.Multimodal
+		type: modelType.Multimodal,
 	},
 	"llama-3.2-vision": {
 		contextLength: 128000,
@@ -199,39 +202,43 @@ const baseModelConfigs: Record<string, {
 		company: "Meta",
 		maxOutput: 8192,
 		trainingCutoff: "Dec 2023",
-		type: modelType.Multimodal
+		type: modelType.Multimodal,
 	},
 	"mixtral-8x22b": {
 		contextLength: 64000,
-		description: "Mixtral 8x22B is MistralAI's latest open model. It sets a new standard for performance and efficiency within the AI community. It is a sparse Mixture-of-Experts (SMoE) model that uses only 39B active parameters out of 141B, offering unparalleled cost efficiency for its size.",
+		description:
+			"Mixtral 8x22B is MistralAI's latest open model. It sets a new standard for performance and efficiency within the AI community. It is a sparse Mixture-of-Experts (SMoE) model that uses only 39B active parameters out of 141B, offering unparalleled cost efficiency for its size.",
 		company: "MistralAi",
 		maxOutput: 8192,
 		trainingCutoff: "Sep 2021?",
-		type: modelType.Text
+		type: modelType.Text,
 	},
 	"command-r-plus": {
 		contextLength: 128000,
-		description: "C4AI Command R+ is an open weights research release of a 104B billion parameter model with highly advanced capabilities, this includes Retrieval Augmented Generation (RAG) and tool use to automate sophisticated tasks. ",
+		description:
+			"C4AI Command R+ is an open weights research release of a 104B billion parameter model with highly advanced capabilities, this includes Retrieval Augmented Generation (RAG) and tool use to automate sophisticated tasks. ",
 		company: "Cohere",
 		maxOutput: 8192,
 		trainingCutoff: "No data",
-		type: modelType.Text
+		type: modelType.Text,
 	},
 	"command-r": {
 		contextLength: 128000,
-		description: "Command R is a generative model optimized for long context tasks such as retrieval-augmented generation (RAG) and using external APIs and tools. As a model built for companies to implement at scale, Command R boasts:",
+		description:
+			"Command R is a generative model optimized for long context tasks such as retrieval-augmented generation (RAG) and using external APIs and tools. As a model built for companies to implement at scale, Command R boasts:",
 		company: "Cohere",
 		maxOutput: 8192,
 		trainingCutoff: "No data",
-		type: modelType.Text
+		type: modelType.Text,
 	},
-	"codestral": {
+	codestral: {
 		contextLength: 32768,
-		description: "Codestral is Mistral AI’s first-ever code model designed for code generation tasks. ",
+		description:
+			"Codestral is Mistral AI’s first-ever code model designed for code generation tasks. ",
 		company: "MistralAi",
 		maxOutput: 8192,
 		trainingCutoff: "No data",
-		type: modelType.Multimodal
+		type: modelType.Multimodal,
 	},
 	"claude-2.1": {
 		contextLength: 200000,
@@ -239,7 +246,7 @@ const baseModelConfigs: Record<string, {
 		company: "Anthropic",
 		maxOutput: 4096,
 		trainingCutoff: "No data",
-		type: modelType.Text
+		type: modelType.Text,
 	},
 	"claude-instant": {
 		contextLength: 200000,
@@ -247,16 +254,17 @@ const baseModelConfigs: Record<string, {
 		company: "Anthropic",
 		maxOutput: 4096,
 		trainingCutoff: "No data",
-		type: modelType.Multimodal
+		type: modelType.Multimodal,
 	},
 	"llama-2": {
 		contextLength: 4096,
-		description: "Llama 2 is a collection of pretrained and fine-tuned generative text models ranging in scale from 7 billion to 70 billion parameters. This is the repository for the 7B fine-tuned model, optimized for dialogue use cases and converted for the Hugging Face Transformers format. Links to other models can be found in the index at the bottom.",
+		description:
+			"Llama 2 is a collection of pretrained and fine-tuned generative text models ranging in scale from 7 billion to 70 billion parameters. This is the repository for the 7B fine-tuned model, optimized for dialogue use cases and converted for the Hugging Face Transformers format. Links to other models can be found in the index at the bottom.",
 		company: "Meta",
 		maxOutput: 4096,
 		trainingCutoff: "No data",
-		type: modelType.Text
-	}
+		type: modelType.Text,
+	},
 };
 
 // Helper function to get model base name
@@ -268,39 +276,39 @@ const getBaseModelName = (modelId: string): string | null => {
 		/(claude-3-opus).*$/,
 		/(claude-3-sonnet).*$/,
 		/(claude-3-haiku).*$/,
-		
+
 		// GPT patterns
 		/(chatgpt-4o-latest).*$/,
 		/(gpt-4o).*$/,
 		/(gpt-4-turbo).*$/,
 		/(gpt-3\.5-turbo).*$/,
-		
+
 		// O1 patterns
 		/(o1-preview).*$/,
 		/(o1-mini).*$/,
-		
+
 		// Llama patterns
-		/(llama-3\.2-vision).*$/,  
+		/(llama-3\.2-vision).*$/,
 		/(llama-3\.2).*$/,
 		/(llama-3).*$/,
 		/(llama-2).*$/,
 		// DALL-E patterns
 		/(dall-e-[23]).*$/,
-		
+
 		// Moderation patterns
 		/(omni-moderation).*$/,
 		/(text-moderation).*$/,
-		
+
 		// Google patterns
 		/(gemini-1\.5-pro).*$/,
 		/(gemini-1\.5-flash).*$/,
 		/(learnlm-1\.5-pro).*$/,
-		
+
 		// Mistral patterns
 		/(mixtral-8x22b).*$/,
-		
+
 		// Cohere patterns
-		/(command-r-plus).*$/
+		/(command-r-plus).*$/,
 	];
 
 	for (const pattern of patterns) {
@@ -328,46 +336,53 @@ export const modelAdditionalInfo: Record<
 	// Define specific models with their unique properties
 	"gpt-4o-2024-05-13": {
 		...baseModelConfigs["gpt-4o"],
-		
+
 		description: "Original gpt-4o snapshot from May 13, 2024.",
 		maxOutput: 4096,
-		evaluationAlias: "gpt-4o"
+		evaluationAlias: "gpt-4o",
 	},
 	"gpt-3.5-turbo-instruct": {
 		...baseModelConfigs["gpt-3.5-turbo"],
-		description: "Similar capabilities as GPT-3 era models. Compatible with legacy Completions endpoint and not Chat Completions.",
+		description:
+			"Similar capabilities as GPT-3 era models. Compatible with legacy Completions endpoint and not Chat Completions.",
 		company: "OpenAI",
 		maxOutput: 4096,
 	},
 	"gpt-4-turbo-preview": {
 		...baseModelConfigs["gpt-4-turbo"],
-		description: "GPT-4 Turbo preview model. Currently points to gpt-4-0125-preview.",
+		description:
+			"GPT-4 Turbo preview model. Currently points to gpt-4-0125-preview.",
 	},
 	"gpt-4-0125-preview": {
 		...baseModelConfigs["gpt-4o"],
-		description: "GPT-4 Turbo preview model intended to reduce cases of “laziness” where the model doesn’t complete a task.",
-		type: modelType.Text
+		description:
+			"GPT-4 Turbo preview model intended to reduce cases of “laziness” where the model doesn’t complete a task.",
+		type: modelType.Text,
 	},
 	"gpt-4-1106-preview": {
 		...baseModelConfigs["gpt-4o"],
-		description: "GPT-4 Turbo preview model featuring improved instruction following, JSON mode, reproducible outputs, parallel function calling, and more. This is a preview model.",
-		type: modelType.Text
+		description:
+			"GPT-4 Turbo preview model featuring improved instruction following, JSON mode, reproducible outputs, parallel function calling, and more. This is a preview model.",
+		type: modelType.Text,
 	},
 	"gpt-4-0613": {
 		...baseModelConfigs["gpt-4o"],
-		description: "Snapshot of gpt-4 from June 13th 2023 with improved function calling support.",
+		description:
+			"Snapshot of gpt-4 from June 13th 2023 with improved function calling support.",
 		maxOutput: 8192,
 		contextLength: 8192,
 		type: modelType.Text,
-		trainingCutoff: "Sep 2021"
+		trainingCutoff: "Sep 2021",
 	},
 	"gemini-exp-1121": {
 		...baseModelConfigs["gemini-1.5-pro"],
-		description: "Gemini 1.5 Pro experimental model. With enhanced coding, reasoning, and perception capabilities",
+		description:
+			"Gemini 1.5 Pro experimental model. With enhanced coding, reasoning, and perception capabilities",
 	},
 	"gemini-exp-1114": {
 		...baseModelConfigs["gemini-1.5-pro"],
-		description: "Gemini 1.5 Pro experimental model. With quality improvements.",
+		description:
+			"Gemini 1.5 Pro experimental model. With quality improvements.",
 	},
 	"gemini-1.5-pro-exp-0801": {
 		...baseModelConfigs["gemini-1.5-pro"],
@@ -375,88 +390,97 @@ export const modelAdditionalInfo: Record<
 	},
 	"llama-3.2-90b-vision-instruct": {
 		...baseModelConfigs["llama-3.2"],
-		description: "The Llama 3.2-Vision instruction-tuned models are optimized for visual recognition, image reasoning, captioning, and answering general questions about an image. The models outperform many of the available open source and closed multimodal models on common industry benchmarks.",
+		description:
+			"The Llama 3.2-Vision instruction-tuned models are optimized for visual recognition, image reasoning, captioning, and answering general questions about an image. The models outperform many of the available open source and closed multimodal models on common industry benchmarks.",
 		contextLength: 128000,
-		type: modelType.Multimodal
+		type: modelType.Multimodal,
 	},
 	"llama-3.2-11b-vision-instruct": {
 		...baseModelConfigs["llama-3.2"],
-		description: "The Llama 3.2-Vision instruction-tuned models are optimized for visual recognition, image reasoning, captioning, and answering general questions about an image. The models outperform many of the available open source and closed multimodal models on common industry benchmarks.",
+		description:
+			"The Llama 3.2-Vision instruction-tuned models are optimized for visual recognition, image reasoning, captioning, and answering general questions about an image. The models outperform many of the available open source and closed multimodal models on common industry benchmarks.",
 		contextLength: 128000,
-		type: modelType.Multimodal
+		type: modelType.Multimodal,
 	},
 	"gpt-3.5-turbo-0125": {
 		...baseModelConfigs["gpt-3.5-turbo"],
-		description: "The latest GPT-3.5 Turbo model with higher accuracy at responding in requested formats and a fix for a bug which caused a text encoding issue for non-English language function calls. ",
+		description:
+			"The latest GPT-3.5 Turbo model with higher accuracy at responding in requested formats and a fix for a bug which caused a text encoding issue for non-English language function calls. ",
 		trainingCutoff: "Sep 2021",
-		type: modelType.Text
+		type: modelType.Text,
 	},
 	"gpt-3.5-turbo-1106": {
 		...baseModelConfigs["gpt-3.5-turbo"],
-		description: "GPT-3.5 Turbo model with improved instruction following, JSON mode, reproducible outputs, parallel function calling, and more.",
-		type: modelType.Text
+		description:
+			"GPT-3.5 Turbo model with improved instruction following, JSON mode, reproducible outputs, parallel function calling, and more.",
+		type: modelType.Text,
 	},
 	"claude-3.5-sonnet-20241022": {
 		...baseModelConfigs["claude-3.5-sonnet"],
-		description: "Snapshot of Claude 3.5 Sonnet from October 22nd 2024. This model is no longer supported on the Anthropic API.",
+		description:
+			"Snapshot of Claude 3.5 Sonnet from October 22nd 2024. This model is no longer supported on the Anthropic API.",
 	},
 	"claude-3.5-haiku-20241022": {
 		...baseModelConfigs["claude-3.5-haiku"],
-		description: "Snapshot of Claude 3.5 Haiku from October 22nd 2024. This model is no longer supported on the Anthropic API.",
+		description:
+			"Snapshot of Claude 3.5 Haiku from October 22nd 2024. This model is no longer supported on the Anthropic API.",
 	},
 	//Hack!
 	"chatgpt-4o-latest": {
 		...baseModelConfigs["gpt-4o"],
-		description: "The chatgpt-4o-latest model version continuously points to the version of GPT-4o used in ChatGPT, and is updated frequently, when there are significant changes.",
-		evaluationAlias: "gpt-4o-2024-11-20"
+		description:
+			"The chatgpt-4o-latest model version continuously points to the version of GPT-4o used in ChatGPT, and is updated frequently, when there are significant changes.",
+		evaluationAlias: "gpt-4o-2024-11-20",
 	},
 };
 
 // Modified getAdditionalInfo function to support inheritance
 export const getAdditionalInfo = (modelId: string) => {
-    const lowercaseId = modelId.toLowerCase();
-    const baseName = getBaseModelName(lowercaseId);
-    
-    return modelAdditionalInfo[lowercaseId] ?? 
-           (baseName && baseModelConfigs[baseName]) ?? 
-           {
-                contextLength: 0,
-                description: "No description available",
-                company: "Unknown",
-                type: modelType.Text,
-                maxOutput: undefined,
-                trainingCutoff: undefined
-            };
+	const lowercaseId = modelId.toLowerCase();
+	const baseName = getBaseModelName(lowercaseId);
+
+	return (
+		modelAdditionalInfo[lowercaseId] ??
+		(baseName && baseModelConfigs[baseName]) ?? {
+			contextLength: 0,
+			description: "No description available",
+			company: "Unknown",
+			type: modelType.Text,
+			maxOutput: undefined,
+			trainingCutoff: undefined,
+		}
+	);
 };
 
 //27.03 Caching for Query
 //14.10.24 Additional context length, description and company info added
 //29.11.24 rework of the model configs and additional info
-
+//
 export const modelsApi = createApi({
 	reducerPath: "modelsApi",
 	baseQuery: fetchBaseQuery({ baseUrl: Endpoints.NAGA_BASE_URL }),
 	endpoints: (build) => ({
-        getModels: build.query<Model[], void>({
-            query: () => "models",
-            transformResponse: (response: { data: Model[] }) => {
-                return response.data
-                    .filter((model) => model.object === "model")
-                    .map((model) => {
-                        const additionalInfo = getAdditionalInfo(model.id);
-                        return {
-                            ...model,
-                            modelType: additionalInfo.type ?? modelType.Text,
-                            contextLength: additionalInfo.contextLength ?? 0,
-                            description: additionalInfo.description ?? "No description available",
-                            company: additionalInfo.company ?? "Unknown",
-                            maxOutput: additionalInfo.maxOutput,
-                            trainingCutoff: additionalInfo.trainingCutoff,
-                        };
-                    });
-            },
-            keepUnusedDataFor: keepCacheFor,
-        }),
+		getModels: build.query<Model[], void>({
+			query: () => "models",
+			transformResponse: (response: { data: Model[] }) => {
+				return response.data
+					.filter((model) => model.object === "model")
+					.map((model) => {
+						const additionalInfo = getAdditionalInfo(model.id);
+						return {
+							...model,
+							modelType: additionalInfo.type ?? modelType.Text,
+							contextLength: additionalInfo.contextLength ?? 0,
+							description:
+								additionalInfo.description ?? "No description available",
+							company: additionalInfo.company ?? "Unknown",
+							maxOutput: additionalInfo.maxOutput,
+							trainingCutoff: additionalInfo.trainingCutoff,
+						};
+					});
+			},
+			keepUnusedDataFor: keepCacheFor,
+		}),
 
 		// New endpoint to get the total number of models
 		getTotalModels: build.query<number, void>({

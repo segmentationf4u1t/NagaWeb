@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { auth } from "@/auth";
+
 import {
 	Home,
 	FileAxis3D,
@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import UserBar from "./userBar";
 import { usePathname } from "next/navigation";
-
+import { FloatingChat } from "./chat/floatingChat";
 
 type NavLinkProps = {
 	href: string;
@@ -72,22 +72,29 @@ const NavLink = ({
 interface DashboardNavigationProps {
 	userName: string;
 	userImage: string;
-	modelCount: number;
+	modelCount: {
+		count: number;
+		timestamp: string;
+	};
 }
 
-export default function DashboardNavigation({ 
-	userName, 
-	userImage, 
-	modelCount 
+export default function DashboardNavigation({
+	userName,
+	userImage,
+	modelCount,
 }: DashboardNavigationProps) {
 	return (
 		<nav className="grid items-start text-sm font-medium p-2">
-			<div className="flex h-14 items-center border-b px-2">
-				<UserBar
-					name={userName}
-					tier="Tier 2"
-					avatarUrl={userImage}
-				/>
+			<div className="flex h-14 items-center ">
+				<aside className="w-64 bg-sidebar border-b">
+					<UserBar
+						name={userName}
+						tier="Tier 2"
+						avatarUrl={userImage}
+						creditsLeft={100}
+					/>
+					{/* Add other sidebar content here */}
+				</aside>
 			</div>
 			<NavLink href="/dashboard" icon={Home}>
 				Dashboard
@@ -95,33 +102,33 @@ export default function DashboardNavigation({
 			<NavLink href="/dashboard/models" icon={FileAxis3D}>
 				Models
 				<Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-					{modelCount}
+					{modelCount.count}
 				</Badge>
 			</NavLink>
+
 			<NavLink href="/dashboard/docs" icon={FileQuestion}>
 				Docs
 			</NavLink>
-			<NavLink href="/dashboard/rankings" icon={FileAxis3DIcon}>
-				Model Evaluations
-			</NavLink>
+
 			<NavLink href="/dashboard/sandbox" icon={Binary}>
-				Sandbox
+				Playground
 			</NavLink>
 			<NavLink href="/dashboard/SearchEngine" icon={Search} disabled>
-				Augmented Search
+				Perplexity
 				<Badge
 					className="ml-auto flex shrink-0 items-right justify-right"
 					variant="outline"
 				>
-					Alpha
+					No Access
 				</Badge>
 			</NavLink>
 			<NavLink href="/dashboard/profile/analytics" icon={BarChartBig}>
 				Profile & Analytics
 			</NavLink>
-			<NavLink href="/dashboard/profile/analytics" icon={HandCoins}>
+			<NavLink href="/dashboard/profile/billing" icon={HandCoins}>
 				Billing
 			</NavLink>
+			<FloatingChat />
 		</nav>
 	);
 }
