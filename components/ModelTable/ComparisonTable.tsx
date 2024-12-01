@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useCallback, memo } from "react";
 import { ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import {
 	Table,
@@ -55,44 +55,52 @@ interface ComparisonTableProps {
 	evaluationsData: EvaluationData[];
 }
 
-const EvaluationBar = ({ value }: { value: number }) => {
+// Memoized EvaluationBar component
+const EvaluationBar = memo(({ value }: { value: number }) => {
+	const width = Math.min(Math.max(value, 0), 100); // Sanitize input
 	return (
 		<div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2.5">
 			<div
 				className="bg-blue-600 h-2.5 rounded-full"
-				style={{ width: `${value * 1}%` }}
+				style={{ width: `${width}%` }}
 			/>
 		</div>
 	);
-};
+});
+EvaluationBar.displayName = "EvaluationBar";
 
 // Helper function to format price per million tokens
 const formatPricePerMillion = (pricing: CombinedModelData["pricing"]) => {
 	if (!pricing) return "N/A";
 
-	if (pricing.per_input_token && pricing.per_output_token) {
-		const inputPrice = (pricing.per_input_token * 1000000).toFixed(2);
-		const outputPrice = (pricing.per_output_token * 1000000).toFixed(2);
-		return `$${inputPrice} / $${outputPrice}`;
-	}
+	try {
+		if (pricing.per_input_token && pricing.per_output_token) {
+			const inputPrice = (pricing.per_input_token * 1000000).toFixed(2);
+			const outputPrice = (pricing.per_output_token * 1000000).toFixed(2);
+			return `$${inputPrice} / $${outputPrice}`;
+		}
 
-	if (pricing.per_image) {
-		return `$${pricing.per_image} per image`;
-	}
+		if (pricing.per_image) {
+			return `$${pricing.per_image} per image`;
+		}
 
-	if (pricing.per_second) {
-		return `$${(pricing.per_second * 1000000).toFixed(6)} per second`;
-	}
+		if (pricing.per_second) {
+			return `$${(pricing.per_second * 1000000).toFixed(6)} per second`;
+		}
 
-	if (pricing.per_character) {
-		return `$${(pricing.per_character * 1000000).toFixed(6)} per char`;
+		if (pricing.per_character) {
+			return `$${(pricing.per_character * 1000000).toFixed(6)} per char`;
+		}
+	} catch (error) {
+		console.error("Error formatting price:", error);
+		return "N/A";
 	}
 
 	return "N/A";
 };
 
-// Left column component
-const ModelInfo = ({ model }: { model: CombinedModelData }) => {
+// Memoized ModelInfo component
+const ModelInfo = memo(({ model }: { model: CombinedModelData }) => {
 	return (
 		<div className="space-y-4">
 			<p className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -126,62 +134,75 @@ const ModelInfo = ({ model }: { model: CombinedModelData }) => {
 				<h4 className="font-semibold text-sm text-neutral-800 dark:text-neutral-200">
 					Quick Actions
 				</h4>
-				<a
-					href={model.pricingUrl}
-					target="_blank"
-					rel="noopener noreferrer"
-					className="text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center"
-				>
-					API Call
-					<ExternalLink className="h-4 w-4 ml-1" />
-				</a>
+				{model.pricingUrl && (
+					<a
+						href={model.pricingUrl}
+						target="_blank"
+						rel="noopener noreferrer nofollow"
+						className="text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center"
+					>
+						API Call
+						<ExternalLink className="h-4 w-4 ml-1" aria-hidden="true" />
+						<span className="sr-only">(opens in new tab)</span>
+					</a>
+				)}
 			</div>
 		</div>
 	);
-};
+});
+ModelInfo.displayName = "ModelInfo";
 
-// Right column component
-const ModelEvaluation = ({
-	evaluation,
-}: { evaluation: EvaluationData | null }) => {
-	if (!evaluation) return null;
+// Memoized ModelEvaluation component
+const ModelEvaluation = memo(
+	({ evaluation }: { evaluation: EvaluationData | null }) => {
+		if (!evaluation) return null;
 
-	// Map the camelCase evaluation fields to display names
-	const evaluationMap = {
-		"Global Average": evaluation.globalAverage,
-		Reasoning: evaluation.reasoning,
-		Coding: evaluation.coding,
-		Mathematics: evaluation.mathematics,
-		"Data Analysis": evaluation.dataAnalysis,
-		Language: evaluation.language,
-		IF: evaluation.if,
-	};
+		const evaluationMap = useMemo(
+			() => ({
+				"Global Average": evaluation.globalAverage,
+				Reasoning: evaluation.reasoning,
+				Coding: evaluation.coding,
+				Mathematics: evaluation.mathematics,
+				"Data Analysis": evaluation.dataAnalysis,
+				Language: evaluation.language,
+				IF: evaluation.if,
+			}),
+			[evaluation],
+		);
 
-	return (
-		<div className="space-y-4">
-			<h4 className="font-semibold text-sm text-neutral-800 dark:text-neutral-200">
-				Model Evaluation
-			</h4>
-			{Object.entries(evaluationMap).map(([key, value]) => (
-				<div key={key} className="space-y-1">
-					<div className="flex justify-between items-center">
-						<span className="text-sm text-neutral-600 dark:text-neutral-400">
-							{key}
-						</span>
-						<span className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-							{typeof value === "number" ? value.toFixed(1) : "0.0"}
-						</span>
+		return (
+			<div className="space-y-4">
+				<h4 className="font-semibold text-sm text-neutral-800 dark:text-neutral-200">
+					Model Evaluation
+				</h4>
+				{Object.entries(evaluationMap).map(([key, value]) => (
+					<div key={key} className="space-y-1">
+						<div className="flex justify-between items-center">
+							<span className="text-sm text-neutral-600 dark:text-neutral-400">
+								{key}
+							</span>
+							<span className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
+								{typeof value === "number" ? value.toFixed(1) : "0.0"}
+							</span>
+						</div>
+						<EvaluationBar value={typeof value === "number" ? value : 0} />
 					</div>
-					<EvaluationBar value={typeof value === "number" ? value : 0} />
-				</div>
-			))}
-		</div>
-	);
-};
+				))}
+			</div>
+		);
+	},
+);
+ModelEvaluation.displayName = "ModelEvaluation";
 
-// Add this helper function near the top of the file
-const copyToClipboard = (text: string) => {
-	navigator.clipboard.writeText(text);
+// Safe clipboard copy function with error handling
+const copyToClipboard = async (text: string): Promise<boolean> => {
+	try {
+		await navigator.clipboard.writeText(text);
+		return true;
+	} catch (error) {
+		console.error("Failed to copy text:", error);
+		return false;
+	}
 };
 
 // Update the SVG with proper accessibility
@@ -209,31 +230,47 @@ export default function ComparisonTable({
 	evaluationsData,
 }: ComparisonTableProps) {
 	const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+	const [copyStatus, setCopyStatus] = useState<Record<string, boolean>>({});
 
-	const toggleRow = (id: string) => {
+	const toggleRow = useCallback((id: string) => {
 		setExpandedRows((prev) => ({ ...prev, [id]: !prev[id] }));
-	};
+	}, []);
 
-	// Merge combinedData with evaluationsData based on model ID
-	const mergedData = combinedData.map((model) => {
-		// Normalize model IDs for comparison by removing case sensitivity and common variations
-		const normalizedModelId = model.id.toLowerCase().trim();
-		const evaluation = evaluationsData.find((evalItem) => {
-			const normalizedEvalModel = evalItem.model.toLowerCase().trim();
-			return normalizedModelId === normalizedEvalModel;
+	const handleCopy = useCallback(async (id: string) => {
+		const success = await copyToClipboard(id);
+		if (success) {
+			setCopyStatus((prev) => ({ ...prev, [id]: true }));
+			setTimeout(() => {
+				setCopyStatus((prev) => ({ ...prev, [id]: false }));
+			}, 2000);
+		}
+	}, []);
+
+	// Memoize merged data to prevent unnecessary recalculations
+	const mergedData = useMemo(() => {
+		return combinedData.map((model) => {
+			const normalizedModelId = model.id.toLowerCase().trim();
+			const evaluation = evaluationsData.find(
+				(evalItem) => evalItem.model.toLowerCase().trim() === normalizedModelId,
+			);
+
+			return {
+				...model,
+				evaluation: evaluation ? { ...evaluation } : null,
+			};
 		});
+	}, [combinedData, evaluationsData]);
 
-		return {
-			...model,
-			evaluation: evaluation
-				? {
-						...evaluation,
-					}
-				: null,
-		};
-	});
-
-	console.log("mergedData", mergedData);
+	// Memoize the price formatting for each model
+	const memoizedPrices = useMemo(() => {
+		return combinedData.reduce(
+			(acc, model) => {
+				acc[model.id] = formatPricePerMillion(model.pricing);
+				return acc;
+			},
+			{} as Record<string, string>,
+		);
+	}, [combinedData]);
 
 	return (
 		<div className="w-full">
@@ -295,10 +332,12 @@ export default function ComparisonTable({
 											variant="ghost"
 											size="sm"
 											className="ml-2 p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded"
-											onClick={() => copyToClipboard(model.id)}
-											title="Copy model ID"
+											onClick={() => handleCopy(model.id)}
+											title={copyStatus[model.id] ? "Copied!" : "Copy model ID"}
 										>
-											<span className="sr-only">Copy model ID</span>
+											<span className="sr-only">
+												{copyStatus[model.id] ? "Copied!" : "Copy model ID"}
+											</span>
 											<CopyIcon />
 										</Button>
 									</div>
@@ -307,7 +346,7 @@ export default function ComparisonTable({
 									{model.modelType || model.type || "N/A"}
 								</TableCell>
 								<TableCell className="text-neutral-700 dark:text-neutral-300">
-									{formatPricePerMillion(model.pricing)}
+									{memoizedPrices[model.id]}
 								</TableCell>
 								<TableCell className="hidden md:table-cell text-neutral-700 dark:text-neutral-300">
 									{model.tiersData?.free || "N/A"}
