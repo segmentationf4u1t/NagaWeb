@@ -1,4 +1,4 @@
-import { calculateAverage, getGlobalAverage } from "./Averaging";
+import { calculateAverage, getGlobalAverage } from "../../../lib/Averaging";
 
 type ProcessedResults = {
 	model: string;

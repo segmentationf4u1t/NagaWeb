@@ -21,33 +21,34 @@ interface Props {
 
 const COLUMNS = [
   { key: 'model', label: 'Model' },
-  { key: 'global_average', label: 'Global Average' },
-  { key: 'reasoning_average', label: 'Reasoning' },
-  { key: 'coding_average', label: 'Coding' },
-  { key: 'mathematics_average', label: 'Mathematics' },
-  { key: 'data_analysis_average', label: 'Data Analysis' },
-  { key: 'language_average', label: 'Language' },
-  { key: 'if_average', label: 'IF' },
+  { key: 'globalAverage', label: 'Global Average' },
+  { key: 'reasoning', label: 'Reasoning' },
+  { key: 'coding', label: 'Coding' },
+  { key: 'mathematics', label: 'Mathematics' },
+  { key: 'dataAnalysis', label: 'Data Analysis' },
+  { key: 'language', label: 'Language' },
+  { key: 'if', label: 'IF' },
 ] as const;
 
 export default function ModelComparisonTable({ rawData }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [sortConfig, setSortConfig] = useState<SortConfig>({
-    key: 'global_average',
+    key: 'globalAverage',
     direction: 'desc'
   });
 
   const processedData = useMemo(() => {
     return rawData.map(row => ({
       ...row,
-      reasoning_average: calculateAverage(row, CATEGORIES.reasoning),
-      coding_average: calculateAverage(row, CATEGORIES.coding),
-      mathematics_average: calculateAverage(row, CATEGORIES.mathematics),
-      data_analysis_average: calculateAverage(row, CATEGORIES.data_analysis),
-      language_average: calculateAverage(row, CATEGORIES.language),
-      if_average: calculateAverage(row, CATEGORIES.if),
-      global_average: calculateAverage(row, Object.values(CATEGORIES).flat())
+      model: row.model,
+      globalAverage: row.global_average,
+      reasoning: row.reasoning_average,
+      coding: row.coding_average,
+      mathematics: row.mathematics_average,
+      dataAnalysis: row.data_analysis_average,
+      language: row.language_average,
+      if: row.if_average
     }));
   }, [rawData]);
 
