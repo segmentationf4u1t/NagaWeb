@@ -124,7 +124,6 @@ export default function ClientModels() {
 		language: result.language_average,
 		if: result.if_average,
 	}));
-	console.log("transformedEvaluations \n", transformedEvaluations);
 
 	return (
 		<div className="h-screen flex flex-col p-2">
