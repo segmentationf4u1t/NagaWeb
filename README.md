@@ -12,8 +12,21 @@
 
 <p align="center">
   <strong>Frontend source code for NagaAI – a gateway to cutting-edge AI technologies.</strong><br>
-  NagaAI provides reverse-proxy services for top-notch AI models, including text-generative and image-generative capabilities.
+  NagaAI provides reverse-proxy services for top-notch AI models, including:
+  - Text Generation Models (GPT-4, Claude 3, Mistral, etc.)
+  - Image Generation (DALL-E 3, Midjourney, Stable Diffusion)
+  - Audio Processing (Whisper, ElevenLabs)
+  - Embeddings & Moderation
 </p>
+
+## 🌟 Features
+
+- Access to 75+ AI models through a unified API
+- OpenAI-compatible endpoints
+- Competitive pricing
+- High availability and reliability
+- Comprehensive documentation
+- Real-time model status and updates
 
 ## 🚀 Demo
 
@@ -36,14 +49,14 @@ git clone https://github.com/NagaAI-Hub/NagaWeb.git
 cd NagaWeb
 
 # Install dependencies
-pnpm install
+bun install
 
 # Start development server
-pnpm run dev
+bun run dev
 
 # Build for production
-pnpm run build
+bun run build
 
 # Serve the production build
-pnpm run start
+bun run start
 ```
