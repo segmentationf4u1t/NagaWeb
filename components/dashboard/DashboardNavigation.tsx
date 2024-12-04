@@ -110,8 +110,8 @@ export default function DashboardNavigation({
 				Docs
 			</NavLink>
 
-			<NavLink href="/dashboard/sandbox" icon={Binary}>
-				Playground
+			<NavLink href="/dashboard/librechat" icon={Binary}>
+				LibreChat
 			</NavLink>
 			<NavLink href="/dashboard/SearchEngine" icon={Search} disabled>
 				Perplexity
@@ -122,13 +122,15 @@ export default function DashboardNavigation({
 					No Access
 				</Badge>
 			</NavLink>
-			<NavLink href="/dashboard/profile/analytics" icon={BarChartBig}>
+			<NavLink href="/dashboard/" icon={BarChartBig}>
+				V/I Modality
+			</NavLink>
+			<NavLink href="/dashboard/profile" icon={BarChartBig}>
 				Profile & Analytics
 			</NavLink>
 			<NavLink href="/dashboard/profile/billing" icon={HandCoins}>
 				Billing
 			</NavLink>
-			<FloatingChat />
 		</nav>
 	);
 }

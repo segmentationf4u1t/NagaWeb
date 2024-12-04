@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, memo, Component, ReactNode } from "react";
+import { useMemo, memo, Component, type ReactNode } from "react";
 import Marquee from "@/components/ui/marquee";
 import { getAdditionalInfo, useGetModelsQuery } from "@/lib/api/modelsApi";
 import type { Model } from "@/types/models";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface LLMInfoProps {
 	id: string;
@@ -47,15 +48,20 @@ const LlmCard = memo(function LlmCard({
 		if (!contextLength) return "N/A";
 		if (contextLength >= 1000000)
 			return `${(contextLength / 1000000).toFixed(1)}M tokens`;
-		if (contextLength >= 1000)
-			return `${Math.round(contextLength / 1000)}K tokens`;
-		return `${contextLength.toLocaleString()} tokens`;
+		if (contextLength >= 1000) {
+			const formattedNumber = contextLength.toLocaleString("en-US");
+			return `${formattedNumber} tokens`;
+		}
+		return `${contextLength.toLocaleString("en-US")} tokens`;
 	}, [contextLength]);
 
 	const formattedMaxOutput = useMemo(() => {
 		if (!maxOutput) return "N/A";
-		if (maxOutput >= 1000) return `${Math.round(maxOutput / 1000)}K tokens`;
-		return `${maxOutput.toLocaleString()} tokens`;
+		if (maxOutput >= 1000) {
+			const formattedNumber = maxOutput.toLocaleString("en-US");
+			return `${formattedNumber} tokens`;
+		}
+		return `${maxOutput.toLocaleString("en-US")} tokens`;
 	}, [maxOutput]);
 
 	// Sanitize company logo path
@@ -169,6 +175,66 @@ const LoadingSpinner = () => (
 	</div>
 );
 
+const SkeletonCard = () => (
+	<Card className="w-full max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg">
+		<CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0 pb-2">
+			<div className="space-y-2">
+				<Skeleton className="h-6 w-32" />
+				<Skeleton className="h-4 w-24" />
+			</div>
+			<Skeleton className="h-12 w-12 rounded-full" />
+		</CardHeader>
+		<CardContent>
+			<div className="flex flex-col gap-3">
+				<Skeleton className="h-16 w-full" />
+				<Separator />
+				<div className="grid grid-cols-2 gap-4">
+					<div className="flex flex-col gap-2">
+						<Skeleton className="h-4 w-24" />
+						<Skeleton className="h-5 w-20" />
+					</div>
+					<div className="flex flex-col items-end gap-2">
+						<Skeleton className="h-4 w-24" />
+						<Skeleton className="h-5 w-20" />
+					</div>
+				</div>
+				<div className="flex flex-col sm:flex-row justify-between gap-3">
+					<div className="flex flex-col gap-2">
+						<Skeleton className="h-4 w-24" />
+						<Skeleton className="h-5 w-28" />
+					</div>
+					<div className="flex flex-col items-start sm:items-end gap-2">
+						<Skeleton className="h-4 w-16" />
+						<div className="flex flex-col gap-1">
+							<Skeleton className="h-4 w-20" />
+							<Skeleton className="h-4 w-20" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</CardContent>
+	</Card>
+);
+
+const SkeletonMarquee = () => {
+	const columns = ["col1", "col2", "col3", "col4"];
+	const skeletonCards = ["card1", "card2", "card3", "card4"];
+
+	return (
+		<div className="relative flex h-[500px] w-full flex-row items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
+			{columns.map((colId) => (
+				<div key={colId} className="w-1/4 px-2 space-y-4">
+					{skeletonCards.map((cardId) => (
+						<SkeletonCard key={`${colId}-${cardId}`} />
+					))}
+				</div>
+			))}
+			<div className="pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-white dark:from-background" />
+			<div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-white dark:from-background" />
+		</div>
+	);
+};
+
 export function MarqueeVertical() {
 	const { data: models, isLoading, error } = useGetModelsQuery();
 
@@ -212,9 +278,22 @@ export function MarqueeVertical() {
 		[],
 	);
 
-	if (isLoading) return <LoadingSpinner />;
-	if (error) return <div className="text-red-500">Error loading models</div>;
-	if (!models?.length) return <div>No models available</div>;
+	if (isLoading) return <SkeletonMarquee />;
+	if (error)
+		return (
+			<>
+				<div className="flex items-center justify-center h-[500px] text-red-500">
+					<SkeletonMarquee />
+				</div>
+				<p>Error loading models, MITIGATED</p>
+			</>
+		);
+	if (!models?.length)
+		return (
+			<div className="flex items-center justify-center h-[500px] text-muted-foreground">
+				<p className="text-xl">No models available</p>
+			</div>
+		);
 
 	return (
 		<ErrorBoundary
