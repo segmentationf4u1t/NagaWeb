@@ -4,7 +4,7 @@ import { limitsApi } from "./api/limitsApi";
 import { modelsApi } from "./api/modelsApi";
 import menuOpenReducer from "./features/isMenuOpen/isMenuOpenSlice";
 import screenSizeReducer from "./features/screenSize/screenSizeSlice";
-import savingCostsReducer from "./features/SavingCosts/SavingCosts";
+
 import { evaluationsApi } from "./api/evaluationsApi";
 
 export const makeStore = () => {
@@ -15,14 +15,19 @@ export const makeStore = () => {
 			[modelsApi.reducerPath]: modelsApi.reducer,
 			[limitsApi.reducerPath]: limitsApi.reducer,
 			evaluationsApi: evaluationsApi.reducer,
-			savingCosts: savingCostsReducer,
 		},
 		middleware: (getDefaultMiddleware) =>
-			getDefaultMiddleware().concat(
+			getDefaultMiddleware({
+				serializableCheck: {
+					ignoredActions: ["your-action-type"],
+				},
+				immutableCheck: process.env.NODE_ENV === "development",
+			}).concat(
 				modelsApi.middleware,
 				limitsApi.middleware,
 				evaluationsApi.middleware,
 			),
+		devTools: process.env.NODE_ENV !== "production",
 	});
 
 	// Set up listeners for RTK Query

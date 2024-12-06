@@ -72,6 +72,10 @@ export default async function RootLayout({
 					{metadata.openGraph.images.map((image) => (
 						<meta key={image.url} property="og:image" content={image.url} />
 					))}
+					<script
+						src="https://unpkg.com/react-scan/dist/auto.global.js"
+						async
+					/>
 				</Head>
 				<body className={inter.className}>
 					<ThemeProvider

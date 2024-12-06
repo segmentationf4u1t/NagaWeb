@@ -10,6 +10,7 @@ enum modelType {
 	Multimodal = "Multimodal",
 	Embedding = "Embedding",
 	Moderation = "Moderation",
+	Unknown = "Unknown",
 }
 // Mad inheritance system for model configs
 // 29.11.24
@@ -265,17 +266,45 @@ const baseModelConfigs: Record<
 		trainingCutoff: "No data",
 		type: modelType.Text,
 	},
+	"mistral-7b-instruct": {
+		contextLength: 64000,
+		description: "Mistral 7B Instruct model.",
+		company: "MistralAi",
+		maxOutput: 8192,
+		trainingCutoff: "No data",
+		type: modelType.Text,
+	},
+	"mixtral-8x7b-instruct": {
+		contextLength: 64000,
+		description:
+			"Mixtral 8x7B Instruct is a state-of-the-art language model using a Sparse Mixture of Experts architecture with eight 7B experts. It excels at text generation, code, reasoning and supports multiple languages. The model outperforms Llama 2 70B while maintaining faster inference.",
+		company: "MistralAi",
+		maxOutput: 8192,
+		trainingCutoff: "No data",
+		type: modelType.Text,
+	},
+	"flux-1.1-pro-ultra": {
+		contextLength: 0,
+		description:
+			"Flux 1.1 Pro Ultra is an advanced AI image generator from Black Forest Labs supporting up to 4MP resolution with Ultra and Raw modes. Known for fast generation (~10s), high quality output, and excellent prompt adherence.",
+		company: "Black Forest Labs",
+		maxOutput: 8192,
+		trainingCutoff: "No data",
+		type: modelType.Image,
+	},
 };
 
 // Helper function to get model base name
 const getBaseModelName = (modelId: string): string | null => {
 	const patterns = [
 		// Claude patterns
-		/(claude-3-5-sonnet).*$/,
+		/(claude-3\.5-sonnet).*$/,
 		/(claude-3\.5-haiku).*$/,
 		/(claude-3-opus).*$/,
 		/(claude-3-sonnet).*$/,
 		/(claude-3-haiku).*$/,
+		/(claude-2\.1).*$/,
+		/(claude-instant).*$/,
 
 		// GPT patterns
 		/(chatgpt-4o-latest).*$/,
@@ -292,6 +321,7 @@ const getBaseModelName = (modelId: string): string | null => {
 		/(llama-3\.2).*$/,
 		/(llama-3).*$/,
 		/(llama-2).*$/,
+
 		// DALL-E patterns
 		/(dall-e-[23]).*$/,
 
@@ -306,9 +336,16 @@ const getBaseModelName = (modelId: string): string | null => {
 
 		// Mistral patterns
 		/(mixtral-8x22b).*$/,
+		/(mixtral-8x7b-instruct).*$/,
+		/(mistral-7b-instruct).*$/,
+		/(codestral).*$/,
 
 		// Cohere patterns
 		/(command-r-plus).*$/,
+		/^(command-r)(?!-plus).*$/,
+
+		// Black Forest Labs patterns
+		/(flux-1\.1-pro-ultra).*$/,
 	];
 
 	for (const pattern of patterns) {
@@ -417,13 +454,13 @@ export const modelAdditionalInfo: Record<
 	},
 	"claude-3.5-sonnet-20241022": {
 		...baseModelConfigs["claude-3.5-sonnet"],
-		description:
-			"Snapshot of Claude 3.5 Sonnet from October 22nd 2024. This model is no longer supported on the Anthropic API.",
+		description: "Snapshot of Claude 3.5 Sonnet from October 22nd 2024.",
+		evaluationAlias: "claude-3-5-sonnet-20241022",
 	},
 	"claude-3.5-haiku-20241022": {
 		...baseModelConfigs["claude-3.5-haiku"],
-		description:
-			"Snapshot of Claude 3.5 Haiku from October 22nd 2024. This model is no longer supported on the Anthropic API.",
+		description: "Snapshot of Claude 3.5 Haiku from October 22nd 2024.",
+		evaluationAlias: "claude-3-5-haiku-20241022",
 	},
 	//Hack!
 	"chatgpt-4o-latest": {
@@ -445,7 +482,7 @@ export const getAdditionalInfo = (modelId: string) => {
 			contextLength: 0,
 			description: "No description available",
 			company: "Unknown",
-			type: modelType.Text,
+			type: modelType.Unknown,
 			maxOutput: undefined,
 			trainingCutoff: undefined,
 		}

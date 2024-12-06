@@ -242,7 +242,13 @@ export function MarqueeVertical() {
 		if (!models?.length)
 			return { firstRow: [], secondRow: [], thirdRow: [], fourthRow: [] };
 
-		const modelArray = [...models];
+		// Filter models to only include Text and Multimodal types
+		const filteredModels = models.filter((model) => {
+			const additionalInfo = getAdditionalInfo(model.id);
+			return ["Text", "Multimodal"].includes(additionalInfo?.type ?? "");
+		});
+
+		const modelArray = [...filteredModels];
 		const quarterLength = Math.ceil(modelArray.length / 4);
 
 		return {

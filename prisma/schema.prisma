@@ -3,12 +3,14 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id            String    @id
+  id            String      @id
+  discord_id    BigInt?     @unique @map("discord_id")
+  api_keys      ApiKey[]
   name          String
   email         String
   emailVerified Boolean
@@ -17,6 +19,9 @@ model User {
   updatedAt     DateTime
   Session       Session[]
   Account       Account[]
+  Grant         Grant[]
+  Suspension    Suspension?
+  Usage         Usage[]
 
   @@unique([email])
   @@map("user")
@@ -65,4 +70,52 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Grant {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount    Decimal  @db.Decimal(23, 16)
+  used      Decimal  @default(0.0000000000000000) @db.Decimal(23, 16)
+  type      String   @db.VarChar(10)
+  expiresAt DateTime
+  issuedAt  DateTime @default(now()) @db.Timestamp()
+
+  @@map("grants")
+}
+
+model ApiKey {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String // key name
+  hashedKey String    @unique // Store hashed version of the key
+  lastUsed  DateTime?
+  expiresAt DateTime? // Optional expiration (Zentix let me know if this is needed)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([hashedKey])
+}
+
+model Suspension {
+  userId      String   @id
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reason      String?  @db.Text
+  suspendedAt DateTime @default(now()) @db.DateTime()
+
+  @@map("suspensions")
+}
+
+//This has to change in order to be used in charts
+model Usage {
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  model  String @db.VarChar(80)
+  count  Int
+
+  @@id([userId, model])
+  @@map("usage")
 }

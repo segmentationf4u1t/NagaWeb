@@ -11,7 +11,16 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/hooks/use-toast";
 import React from "react";
+import { Input } from "@/components/ui/input";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { motion } from "framer-motion";
 
 interface EvaluationData {
 	model: string;
@@ -69,19 +78,24 @@ const EvaluationBar = memo(({ value }: { value: number }) => {
 });
 EvaluationBar.displayName = "EvaluationBar";
 
+// Helper function to format numbers with commas
+const formatNumber = (value: number): string => {
+	return value.toLocaleString("en-US");
+};
+
 // Helper function to format price per million tokens
 const formatPricePerMillion = (pricing: CombinedModelData["pricing"]) => {
 	if (!pricing) return "N/A";
 
 	try {
 		if (pricing.per_input_token && pricing.per_output_token) {
-			const inputPrice = (pricing.per_input_token * 1000000).toFixed(2);
-			const outputPrice = (pricing.per_output_token * 1000000).toFixed(2);
+			const inputPrice = formatNumber(pricing.per_input_token * 1000000);
+			const outputPrice = formatNumber(pricing.per_output_token * 1000000);
 			return `$${inputPrice} / $${outputPrice}`;
 		}
 
 		if (pricing.per_image) {
-			return `$${pricing.per_image} per image`;
+			return `$${formatNumber(pricing.per_image)} per image`;
 		}
 
 		if (pricing.per_second) {
@@ -101,6 +115,27 @@ const formatPricePerMillion = (pricing: CombinedModelData["pricing"]) => {
 
 // Memoized ModelInfo component
 const ModelInfo = memo(({ model }: { model: CombinedModelData }) => {
+	const formatContextLength = (value?: string | number) => {
+		if (!value) return "N/A";
+
+		// If value is already a number, use it directly
+		if (typeof value === "number") {
+			if (value >= 1000000) {
+				return `${(value / 1000000).toFixed(1)}M tokens`;
+			}
+			return `${value.toLocaleString("en-US")} tokens`;
+		}
+
+		// If value is a string, parse it
+		const numericValue = Number.parseInt(value.replace(/[^0-9]/g, ""), 10);
+		if (Number.isNaN(numericValue)) return value;
+
+		if (numericValue >= 1000000) {
+			return `${(numericValue / 1000000).toFixed(1)}M tokens`;
+		}
+		return `${numericValue.toLocaleString("en-US")} tokens`;
+	};
+
 	return (
 		<div className="space-y-4">
 			<p className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -111,7 +146,7 @@ const ModelInfo = memo(({ model }: { model: CombinedModelData }) => {
 					Context Length
 				</h4>
 				<p className="text-neutral-600 dark:text-neutral-400">
-					{model.contextLength}
+					{formatContextLength(model.contextLength)}
 				</p>
 			</div>
 			<div>
@@ -119,7 +154,7 @@ const ModelInfo = memo(({ model }: { model: CombinedModelData }) => {
 					Max Output
 				</h4>
 				<p className="text-neutral-600 dark:text-neutral-400">
-					{model.maxOutput}
+					{formatContextLength(model.maxOutput)}
 				</p>
 			</div>
 			<div>
@@ -225,30 +260,30 @@ const CopyIcon = () => (
 	</svg>
 );
 
+const RankDisplay = memo(({ rank }: { rank?: number }) => {
+	if (!rank) return <span>N/A</span>;
+	return <span className="text-base">{rank}</span>;
+});
+RankDisplay.displayName = "RankDisplay";
+
+// Add this animation configuration before the ComparisonTable component
+const tableAnimations = {
+	initial: { opacity: 0, y: 20 },
+	animate: { opacity: 1, y: 0 },
+	exit: { opacity: 0, y: -20 },
+};
+
 export default function ComparisonTable({
 	combinedData,
 	evaluationsData,
 }: ComparisonTableProps) {
-	const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
-	const [copyStatus, setCopyStatus] = useState<Record<string, boolean>>({});
+	const { toast } = useToast();
+	const [searchQuery, setSearchQuery] = useState("");
 
-	const toggleRow = useCallback((id: string) => {
-		setExpandedRows((prev) => ({ ...prev, [id]: !prev[id] }));
-	}, []);
-
-	const handleCopy = useCallback(async (id: string) => {
-		const success = await copyToClipboard(id);
-		if (success) {
-			setCopyStatus((prev) => ({ ...prev, [id]: true }));
-			setTimeout(() => {
-				setCopyStatus((prev) => ({ ...prev, [id]: false }));
-			}, 2000);
-		}
-	}, []);
-
-	// Memoize merged data to prevent unnecessary recalculations
+	// First, calculate mergedData with ranks
 	const mergedData = useMemo(() => {
-		return combinedData.map((model) => {
+		// First merge the data
+		const merged = combinedData.map((model) => {
 			const normalizedModelId = model.id.toLowerCase().trim();
 			const evaluation = evaluationsData.find(
 				(evalItem) => evalItem.model.toLowerCase().trim() === normalizedModelId,
@@ -259,7 +294,54 @@ export default function ComparisonTable({
 				evaluation: evaluation ? { ...evaluation } : null,
 			};
 		});
+
+		// Sort and assign ranks
+		const sortedData = merged
+			.sort((a, b) => {
+				const scoreA = a.evaluation?.globalAverage ?? -1;
+				const scoreB = b.evaluation?.globalAverage ?? -1;
+				return scoreB - scoreA;
+			})
+			.map((model, index) => ({
+				...model,
+				rank: index + 1,
+			}));
+
+		return sortedData;
 	}, [combinedData, evaluationsData]);
+
+	// Initialize expandedRows with the top-ranked model's ID
+	const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>(
+		() => {
+			const topRankedModel = mergedData.find((model) => model.rank === 1);
+			return topRankedModel ? { [topRankedModel.id]: true } : {};
+		},
+	);
+
+	const toggleRow = useCallback((id: string) => {
+		setExpandedRows((prev) => ({ ...prev, [id]: !prev[id] }));
+	}, []);
+
+	const handleCopy = useCallback(
+		async (id: string) => {
+			const success = await copyToClipboard(id);
+			if (success) {
+				toast({
+					title: "Copied!",
+					description: `Model ID "${id}" copied to clipboard`,
+					duration: 2000,
+				});
+			} else {
+				toast({
+					title: "Failed to copy",
+					description: "Please try again",
+					variant: "destructive",
+					duration: 2000,
+				});
+			}
+		},
+		[toast],
+	);
 
 	// Memoize the price formatting for each model
 	const memoizedPrices = useMemo(() => {
@@ -272,78 +354,131 @@ export default function ComparisonTable({
 		);
 	}, [combinedData]);
 
+	// Filter mergedData based on search query
+	const filteredData = useMemo(() => {
+		return mergedData.filter((model) =>
+			model.id.toLowerCase().includes(searchQuery.toLowerCase()),
+		);
+	}, [mergedData, searchQuery]);
+	console.log(filteredData);
 	return (
 		<div className="w-full">
-			<Table className="w-full border-collapse border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden">
+			<Input
+				type="text"
+				placeholder="Search models..."
+				value={searchQuery}
+				onChange={(e) => setSearchQuery(e.target.value)}
+				className="mb-4 p-4 rounded-full"
+			/>
+			<Table className="w-full table-fixed border-collapse border-neutral-200 dark:border-neutral-700 rounded-lg overflow-hidden">
 				<TableHeader>
 					<TableRow className="bg-neutral-100 dark:bg-neutral-800">
-						<TableHead className="w-[180px] text-neutral-700 dark:text-neutral-300">
+						<TableHead className="w-[80px] text-neutral-700 dark:text-neutral-300">
+							Rank
+						</TableHead>
+						<TableHead className="w-[200px] text-neutral-700 dark:text-neutral-300">
 							Model
 						</TableHead>
-						<TableHead className="text-neutral-700 dark:text-neutral-300">
+						<TableHead className="w-[120px] text-neutral-700 dark:text-neutral-300">
 							Type
 						</TableHead>
-						<TableHead className="text-neutral-700 dark:text-neutral-300">
-							Cost per 1M tokens{" "}
+						<TableHead className="w-[150px] text-neutral-700 dark:text-neutral-300">
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger className="flex items-center">
+										ost per 1M tokens{" "}
+										<span className="ml-1 text-neutral-400">ⓘ</span>
+									</TooltipTrigger>
+									<TooltipContent>
+										<p>$Input / $Output price per million tokens</p>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						</TableHead>
-						<TableHead className="hidden md:table-cell text-neutral-700 dark:text-neutral-300">
+						<TableHead className="w-[120px] hidden md:table-cell text-neutral-700 dark:text-neutral-300">
 							Free limit
 						</TableHead>
-						<TableHead className="hidden lg:table-cell text-neutral-700 dark:text-neutral-300">
+						<TableHead className="w-[120px] hidden lg:table-cell text-neutral-700 dark:text-neutral-300">
 							Tier-1 limit
 						</TableHead>
-						<TableHead className="hidden lg:table-cell text-neutral-700 dark:text-neutral-300">
+						<TableHead className="w-[120px] hidden lg:table-cell text-neutral-700 dark:text-neutral-300">
 							Tier-2 limit
 						</TableHead>
-						<TableHead className="hidden xl:table-cell text-neutral-700 dark:text-neutral-300">
+						<TableHead className="w-[120px] hidden xl:table-cell text-neutral-700 dark:text-neutral-300">
 							Tier-3 limit
 						</TableHead>
-						<TableHead className="hidden xl:table-cell text-neutral-700 dark:text-neutral-300">
+						<TableHead className="w-[120px] hidden xl:table-cell text-neutral-700 dark:text-neutral-300">
 							Tier-4 limit
 						</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{mergedData.map((model) => (
+					{filteredData.map((model, index) => (
 						<React.Fragment key={model.id}>
-							<TableRow className="group border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800/50">
+							<motion.tr
+								className="group border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-900/50 bg-neutral-800/50"
+								initial="initial"
+								animate="animate"
+								exit="exit"
+								variants={tableAnimations}
+								transition={{
+									duration: 0.3,
+									delay: index * 0.1, // Stagger effect
+									ease: "easeOut",
+								}}
+							>
 								<TableCell className="font-medium text-neutral-900 dark:text-neutral-100">
 									<div className="flex items-center">
-										<Button
-											variant="ghost"
-											size="sm"
-											className="p-0 hover:bg-transparent text-neutral-900 dark:text-neutral-100"
-											onClick={() => toggleRow(model.id)}
-											aria-expanded={expandedRows[model.id]}
-											aria-controls={`${model.id}-details`}
-										>
-											<span className="sr-only">
-												{expandedRows[model.id] ? "Collapse" : "Expand"} details
-												for {model.id}
-											</span>
-											{expandedRows[model.id] ? (
-												<ChevronUp className="h-4 w-4 mr-2 text-neutral-500 dark:text-neutral-400 transition-transform group-hover:text-neutral-700 dark:group-hover:text-neutral-200" />
-											) : (
-												<ChevronDown className="h-4 w-4 mr-2 text-neutral-500 dark:text-neutral-400 transition-transform group-hover:text-neutral-700 dark:group-hover:text-neutral-200" />
-											)}
-											{model.id}
-										</Button>
+										{model.modelType === "Text" ||
+										model.modelType === "Multimodal" ? (
+											<Button
+												variant="ghost"
+												size="sm"
+												className="p-0 hover:bg-transparent text-neutral-900 dark:text-neutral-100"
+												onClick={() => toggleRow(model.id)}
+												aria-expanded={expandedRows[model.id]}
+												aria-controls={`${model.id}-details`}
+											>
+												<span className="sr-only">
+													{expandedRows[model.id] ? "Collapse" : "Expand"}{" "}
+													details for {model.id}
+												</span>
+												{expandedRows[model.id] ? (
+													<ChevronUp className="h-4 w-4 mr-2 text-neutral-500 dark:text-neutral-400 transition-transform group-hover:text-neutral-700 dark:group-hover:text-neutral-200" />
+												) : (
+													<ChevronDown className="h-4 w-4 mr-2 text-neutral-500 dark:text-neutral-400 transition-transform group-hover:text-neutral-700 dark:group-hover:text-neutral-200" />
+												)}
+											</Button>
+										) : (
+											<Button
+												variant="ghost"
+												size="sm"
+												className="p-0 text-neutral-400 dark:text-neutral-600 cursor-default"
+												disabled
+											>
+												<ChevronDown className="h-4 w-4 mr-2" />
+											</Button>
+										)}
+										<RankDisplay rank={model.rank} />
+									</div>
+								</TableCell>
+								<TableCell className="font-medium text-neutral-900 dark:text-neutral-100">
+									<div className="flex items-center">
+										<span>{model.id}</span>
 										<Button
 											variant="ghost"
 											size="sm"
 											className="ml-2 p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded"
 											onClick={() => handleCopy(model.id)}
-											title={copyStatus[model.id] ? "Copied!" : "Copy model ID"}
+											title="Copy model ID"
 										>
-											<span className="sr-only">
-												{copyStatus[model.id] ? "Copied!" : "Copy model ID"}
-											</span>
+											<span className="sr-only">Copy model ID</span>
 											<CopyIcon />
 										</Button>
 									</div>
 								</TableCell>
 								<TableCell className="text-neutral-700 dark:text-neutral-300">
-									{model.modelType || model.type || "N/A"}
+									{model.modelType || "N/A"}
 								</TableCell>
 								<TableCell className="text-neutral-700 dark:text-neutral-300">
 									{memoizedPrices[model.id]}
@@ -363,11 +498,17 @@ export default function ComparisonTable({
 								<TableCell className="hidden xl:table-cell text-neutral-700 bg-gradient-to-r from-rose-500 to-purple-500 bg-clip-text text-transparent font-bold">
 									{model.tiersData?.["tier-4"] || "N/A"}
 								</TableCell>
-							</TableRow>
+							</motion.tr>
 							{expandedRows[model.id] && (
-								<TableRow id={`${model.id}-details`}>
+								<motion.tr
+									id={`${model.id}-details`}
+									initial={{ opacity: 0, height: 0 }}
+									animate={{ opacity: 1, height: "auto" }}
+									exit={{ opacity: 0, height: 0 }}
+									transition={{ duration: 0.3 }}
+								>
 									<TableCell
-										colSpan={8}
+										colSpan={9}
 										className="bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-700"
 									>
 										<div className="p-4 rounded-md">
@@ -377,7 +518,7 @@ export default function ComparisonTable({
 											</div>
 										</div>
 									</TableCell>
-								</TableRow>
+								</motion.tr>
 							)}
 						</React.Fragment>
 					))}
