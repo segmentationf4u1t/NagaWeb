@@ -21,6 +21,7 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { motion } from "framer-motion";
+import { formatPricePerMillion, formatContextLength } from "@/lib/the_library";
 
 interface EvaluationData {
 	model: string;
@@ -78,64 +79,8 @@ const EvaluationBar = memo(({ value }: { value: number }) => {
 });
 EvaluationBar.displayName = "EvaluationBar";
 
-// Helper function to format numbers with commas
-const formatNumber = (value: number): string => {
-	return value.toLocaleString("en-US");
-};
-
-// Helper function to format price per million tokens
-const formatPricePerMillion = (pricing: CombinedModelData["pricing"]) => {
-	if (!pricing) return "N/A";
-
-	try {
-		if (pricing.per_input_token && pricing.per_output_token) {
-			const inputPrice = formatNumber(pricing.per_input_token * 1000000);
-			const outputPrice = formatNumber(pricing.per_output_token * 1000000);
-			return `$${inputPrice} / $${outputPrice}`;
-		}
-
-		if (pricing.per_image) {
-			return `$${formatNumber(pricing.per_image)} per image`;
-		}
-
-		if (pricing.per_second) {
-			return `$${(pricing.per_second * 1000000).toFixed(6)} per second`;
-		}
-
-		if (pricing.per_character) {
-			return `$${(pricing.per_character * 1000000).toFixed(6)} per char`;
-		}
-	} catch (error) {
-		console.error("Error formatting price:", error);
-		return "N/A";
-	}
-
-	return "N/A";
-};
-
 // Memoized ModelInfo component
 const ModelInfo = memo(({ model }: { model: CombinedModelData }) => {
-	const formatContextLength = (value?: string | number) => {
-		if (!value) return "N/A";
-
-		// If value is already a number, use it directly
-		if (typeof value === "number") {
-			if (value >= 1000000) {
-				return `${(value / 1000000).toFixed(1)}M tokens`;
-			}
-			return `${value.toLocaleString("en-US")} tokens`;
-		}
-
-		// If value is a string, parse it
-		const numericValue = Number.parseInt(value.replace(/[^0-9]/g, ""), 10);
-		if (Number.isNaN(numericValue)) return value;
-
-		if (numericValue >= 1000000) {
-			return `${(numericValue / 1000000).toFixed(1)}M tokens`;
-		}
-		return `${numericValue.toLocaleString("en-US")} tokens`;
-	};
-
 	return (
 		<div className="space-y-4">
 			<p className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -386,7 +331,7 @@ export default function ComparisonTable({
 							<TooltipProvider>
 								<Tooltip>
 									<TooltipTrigger className="flex items-center">
-										ost per 1M tokens{" "}
+										Cost per 1M tokens{" "}
 										<span className="ml-1 text-neutral-400">ⓘ</span>
 									</TooltipTrigger>
 									<TooltipContent>
@@ -480,11 +425,61 @@ export default function ComparisonTable({
 								<TableCell className="text-neutral-700 dark:text-neutral-300">
 									{model.modelType || "N/A"}
 								</TableCell>
-								<TableCell className="text-neutral-700 dark:text-neutral-300">
-									{memoizedPrices[model.id]}
+								<TableCell className="text-neutral-700 dark:text-neutral-300 whitespace-nowrap">
+									{memoizedPrices[model.id] === "Free of Charge" ? (
+										<motion.span
+											className="font-bold text-green-500 inline-block"
+											initial={{ scale: 1 }}
+											animate={{ scale: [1, 1.05, 1] }}
+											transition={{
+												duration: 1.5,
+												repeat: Infinity,
+												repeatType: "loop",
+											}}
+										>
+											{memoizedPrices[model.id]}
+										</motion.span>
+									) : (
+										memoizedPrices[model.id]
+									)}
 								</TableCell>
 								<TableCell className="hidden md:table-cell text-neutral-700 dark:text-neutral-300">
-									{model.tiersData?.free || "N/A"}
+									{model.tiersData?.free ? (
+										model.tiersData.free
+									) : (
+										<motion.span
+											className="text-amber-500"
+											initial={{ opacity: 0 }}
+											animate={{ opacity: 1 }}
+											transition={{ delay: 0.5 }}
+										>
+											<span className="inline-flex">
+												{Array.from("Upgrade to unlock").map((char, index) => (
+													<motion.span
+														key={index}
+														style={{
+															display: "inline-block",
+															whiteSpace: "pre",
+														}}
+														initial={{ y: 0 }}
+														animate={{ y: [0, -3, 0] }}
+														transition={{
+															duration: 0.5,
+															delay: index * 0.05,
+															repeat: Infinity,
+															repeatType: "loop",
+														}}
+													>
+														{char}
+													</motion.span>
+												))}
+												<ExternalLink
+													className="h-4 w-4 ml-1"
+													aria-hidden="true"
+												/>
+											</span>
+										</motion.span>
+									)}
 								</TableCell>
 								<TableCell className="hidden lg:table-cell text-neutral-700 dark:text-blue-500 font-bold">
 									{model.tiersData?.["tier-1"] || "N/A"}

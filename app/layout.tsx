@@ -29,6 +29,9 @@ export const metadata: Metadata = {
 			},
 		],
 	},
+	other: {
+		cryptomus: "5e45c09f",
+	},
 };
 
 interface Image {
@@ -51,6 +54,9 @@ interface Metadata {
 	keywords: string;
 	metadataBase: URL | null;
 	openGraph: OpenGraph;
+	other?: {
+		[key: string]: string;
+	};
 }
 
 export default async function RootLayout({

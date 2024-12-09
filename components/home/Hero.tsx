@@ -15,8 +15,7 @@ import {
 	SiMeta,
 	SiOpenai,
 } from "react-icons/si";
-
-import Script from "next/script";
+import { DashboardSkeleton } from "./dashboard-skeleton";
 
 const iconComponents = [
 	SiAnthropic,
@@ -79,23 +78,8 @@ const iconVariants = {
 };
 
 export default function Hero() {
-	const { setTheme } = useTheme();
-
-	useEffect(() => {
-		setTheme("dark");
-	}, [setTheme]);
-
 	return (
 		<>
-			<Script
-				src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
-				strategy="beforeInteractive"
-			/>
-			<Script
-				src="https://cdn.jsdelivr.net/npm/perlin-noise@0.0.1/index.js"
-				strategy="beforeInteractive"
-			/>
-			<Script src="/p.js" strategy="afterInteractive" type="module" />
 			<div className="relative rounded-lg">
 				<motion.section
 					variants={containerVariants}
@@ -171,18 +155,8 @@ export default function Hero() {
 								variants={itemVariants}
 								className="container mx-auto"
 							/>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 1500 850"
-								shapeRendering="optimizeSpeed"
-								role="img"
-								aria-label="Decorative background pattern"
-							>
-								<path
-									fill="none"
-									d="M487.5 212.8c-29.7-17.6-65-26.9-102.1-26.9-112.3 0-204.2 91-204.2 204.2 0 112.3 91 204.2 204.2 204.2 112.3 0 194.9-110.5 246-230.2 55.7-130 132.7-204.2 132.7-204.2 63.1-63.1 145.7-95.6 227.4-95.6 83.5 0 168 31.6 232.1 94.7 127.2 127.2 127.2 332.3 0 459.5s-332.3 127.2-459.5 0c-25.1-25.1-42.7-50.1-57.5-79.8 M781 397c12.1 72.4 44.4 111 69.5 136 79.8 79.8 208.8 79.8 288.7 0s79.8-208.8 0-288.7-208.8-79.8-288.7 0c-38.1 38.1-66.8 76.1-119.7 193.1C677 555.3 616.6 617.5 616.6 617.5 557.2 676.9 475.5 714 385.4 714 206.3 714 60.6 568.3 60.6 389.2S206.3 64.3 385.4 64.3c59.4 0 116 15.8 163.4 44.6"
-								/>
-							</svg>
+							<DashboardSkeleton />
+							<h1>The only thing you need is us.</h1>
 						</div>
 					</div>
 				</motion.section>

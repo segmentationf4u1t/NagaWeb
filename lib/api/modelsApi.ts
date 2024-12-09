@@ -292,68 +292,58 @@ const baseModelConfigs: Record<
 		trainingCutoff: "No data",
 		type: modelType.Image,
 	},
+	"gemini-exp-1206": {
+		contextLength: 2000000,
+		description: "Gemini 2.0-Flash experimental model.",
+		company: "Google",
+		maxOutput: 8192,
+		trainingCutoff: "No data",
+		type: modelType.Multimodal,
+	},
 };
 
 // Helper function to get model base name
 const getBaseModelName = (modelId: string): string | null => {
-	const patterns = [
-		// Claude patterns
-		/(claude-3\.5-sonnet).*$/,
-		/(claude-3\.5-haiku).*$/,
-		/(claude-3-opus).*$/,
-		/(claude-3-sonnet).*$/,
-		/(claude-3-haiku).*$/,
-		/(claude-2\.1).*$/,
-		/(claude-instant).*$/,
-
-		// GPT patterns
-		/(chatgpt-4o-latest).*$/,
-		/(gpt-4o).*$/,
-		/(gpt-4-turbo).*$/,
-		/(gpt-3\.5-turbo).*$/,
-
-		// O1 patterns
-		/(o1-preview).*$/,
-		/(o1-mini).*$/,
-
-		// Llama patterns
-		/(llama-3\.2-vision).*$/,
-		/(llama-3\.2).*$/,
-		/(llama-3).*$/,
-		/(llama-2).*$/,
-
-		// DALL-E patterns
-		/(dall-e-[23]).*$/,
-
-		// Moderation patterns
-		/(omni-moderation).*$/,
-		/(text-moderation).*$/,
-
-		// Google patterns
-		/(gemini-1\.5-pro).*$/,
-		/(gemini-1\.5-flash).*$/,
-		/(learnlm-1\.5-pro).*$/,
-
-		// Mistral patterns
-		/(mixtral-8x22b).*$/,
-		/(mixtral-8x7b-instruct).*$/,
-		/(mistral-7b-instruct).*$/,
-		/(codestral).*$/,
-
-		// Cohere patterns
-		/(command-r-plus).*$/,
-		/^(command-r)(?!-plus).*$/,
-
-		// Black Forest Labs patterns
-		/(flux-1\.1-pro-ultra).*$/,
+	const simpleRegexPatterns = [
+		/^(claude-3\.5-sonnet)/,
+		/^(claude-3\.5-haiku)/,
+		/^(claude-3-opus)/,
+		/^(claude-3-sonnet)/,
+		/^(claude-3-haiku)/,
+		/^(claude-2\.1)/,
+		/^(claude-instant)/,
+		/^(chatgpt-4o-latest)/,
+		/^(gpt-4o)/,
+		/^(gpt-4-turbo)/,
+		/^(gpt-3\.5-turbo)/,
+		/^(o1-preview)/,
+		/^(o1-mini)/,
+		/^(llama-3\.2-vision)/,
+		/^(llama-3\.2)/,
+		/^(llama-3)/,
+		/^(llama-2)/,
+		/^(dall-e-[23])/,
+		/^(omni-moderation)/,
+		/^(text-moderation)/,
+		/^(gemini-1\.5-pro)/,
+		/^(gemini-1\.5-flash)/,
+		/^(learnlm-1\.5-pro)/,
+		/^(gemini-exp-1206)/,
+		/^(mixtral-8x22b)/,
+		/^(mixtral-8x7b-instruct)/,
+		/^(mistral-7b-instruct)/,
+		/^(codestral)/,
+		/^(command-r-plus)/,
+		/^(command-r)(?!-plus)/,
+		/^(flux-1\.1-pro-ultra)/,
 	];
 
-	for (const pattern of patterns) {
-		const match = modelId.match(pattern);
-		if (match?.at(1)) {
-			return match[1];
+	for (const pattern of simpleRegexPatterns) {
+		if (pattern.test(modelId)) {
+			return modelId.match(pattern)![1]; // Extract the captured group
 		}
 	}
+
 	return null;
 };
 

@@ -29,6 +29,14 @@
 		--color-3: 210 100% 63%;
 		--color-4: 195 100% 63%;
 		--color-5: 90 100% 63%;
+		--sidebar-background: 0 0% 98%;
+		--sidebar-foreground: 240 5.3% 26.1%;
+		--sidebar-primary: 240 5.9% 10%;
+		--sidebar-primary-foreground: 0 0% 98%;
+		--sidebar-accent: 240 4.8% 95.9%;
+		--sidebar-accent-foreground: 240 5.9% 10%;
+		--sidebar-border: 220 13% 91%;
+		--sidebar-ring: 217.2 91.2% 59.8%;
 	}
 
 	.dark {
@@ -56,6 +64,15 @@
 		--color-3: 210 100% 63%;
 		--color-4: 195 100% 63%;
 		--color-5: 90 100% 63%;
+		--sidebar-background: 240 5.9% 10%;
+		--sidebar-foreground: 240 4.8% 95.9%;
+		--sidebar-primary: 224.3 76.3% 48%;
+		--sidebar-primary-foreground: 0 0% 100%;
+		--sidebar-accent: 240 3.7% 15.9%;
+		--sidebar-accent-foreground: 240 4.8% 95.9%;
+		--sidebar-border: 240 3.7% 15.9%;
+		--sidebar-ring: 217.2 91.2% 59.8%;
+		--chart-1: 220 70% 50%;    --chart-5: 160 60% 45%;    --chart-3: 30 80% 55%;    --chart-4: 280 65% 60%;    --chart-2: 340 75% 55%;
 	}
 }
 
@@ -394,3 +411,9 @@
 		border-image-source: linear-gradient(270deg, #f3ec78, #af4261);
 	}
 }
+
+/* Add these styles if you want a visible resize feedback */
+.resize-handle-active {
+	background-color: rgba(200, 200, 200, 0.1);
+}
+
